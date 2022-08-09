@@ -77,7 +77,8 @@ def get_tweet_searchs(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_search_tweet_search(db: Session, tweet_search: schemas.TweetSearchCreate, search_id: int):
-    db_tweet_search = models.TweetSearch(**tweet_search.dict(), owner_id=search_id)
+    #db_tweet_search = models.TweetSearch(**tweet_search.dict(), owner_id=search_id)
+    db_tweet_search = models.TweetSearch(**tweet_search, owner_id=search_id)
     db.add(db_tweet_search)
     db.commit()
     db.refresh(db_tweet_search)

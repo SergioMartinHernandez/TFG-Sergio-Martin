@@ -7,8 +7,8 @@ from typing import List, Optional
 # Creacion del objeto
 class TweetSearchBase(BaseModel):
     text: str
-    author_id: int
-    created_at: str
+    author: str
+    created_at: date
     retweet_count: int
     reply_count: int
     like_count: int

@@ -1,6 +1,5 @@
 from datetime import date
 from email.policy import default
-from tkinter import PhotoImage
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import relationship
 
@@ -46,7 +45,7 @@ class TweetSearch(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     text = Column(String, index=True)
-    author_id = Column(Integer, index=True)
+    author = Column(String, index=True)
     created_at = Column(Date, index=True)
     retweet_count = Column(Integer, index=True)
     reply_count = Column(Integer, index=True)
