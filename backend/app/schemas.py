@@ -31,7 +31,7 @@ class TweetSearch(TweetSearchBase):
 
 
 class UserSearchBase(BaseModel):
-    created_at: str
+    created_at: date
     description: str
     location: str
     name: str

@@ -58,12 +58,12 @@ def get_db(request: Request):
 
 #FALTAN HACER UPDATE USER, DELETE USER, DELETE TWEETS SEARCH, DELETE USER SEARCHS
 
-@app.post("/createuser/", response_model=schemas.User)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_username(db, username=user.username)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Username already registered")
-    return crud.create_user(db=db, user=user)
+# @app.post("/createuser/", response_model=schemas.User)
+# def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+#     db_user = crud.get_user_by_username(db, username=user.username)
+#     if db_user:
+#         raise HTTPException(status_code=400, detail="Username already registered")
+#     return crud.create_user(db=db, user=user)
 
 @app.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
@@ -104,7 +104,7 @@ def create_search_for_user(
         searchs.search_tweets(db=db, query=searchquery.title, search_id=searchquery.id)
     else:
         # hacer busqueda de usertweet
-        searchs.search_user(db=db, query=searchquery.title, search_id=searchquery.id)
+        searchs.search_user(db=db, username=searchquery.title, search_id=searchquery.id)
     return searchquery
 
 
@@ -139,7 +139,6 @@ def read_user_searchs(skip: int = 0, limit: int = 100, db: Session = Depends(get
     return usersearchs
 
 
-# ACCIONES DE LA PAGINA QUE NO SE SI VAN AQUI
 @app.post("/signup", response_model=schemas.User)
 def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_username(db, username=user.username)
@@ -203,7 +202,7 @@ async def get_current_active_user(current_user: schemas.UserBase = Depends(get_c
     return current_user
 
 
-@app.post("/token", response_model=schemas.Token)
+@app.post("/login", response_model=schemas.Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db) ):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:

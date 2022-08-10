@@ -90,7 +90,7 @@ def get_user_searchs(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_search_user_search(db: Session, user_search: schemas.UserSearchCreate, search_id: int):
-    db_user_search = models.UserSearch(**user_search.dict(), owner_id=search_id)
+    db_user_search = models.UserSearch(**user_search, owner_id=search_id)
     db.add(db_user_search)
     db.commit()
     db.refresh(db_user_search)
