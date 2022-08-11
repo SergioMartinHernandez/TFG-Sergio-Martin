@@ -23,7 +23,7 @@ export default {
   height: 100%;
 }
 
-html, body, form, main {
-    height: 100%;
+body, main {
+    height: 100vh;
 }
 </style>

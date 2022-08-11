@@ -5,15 +5,17 @@ import Home from '@/views/Home.vue'
 import LogIn from '@/views/LogIn.vue';
 import SignUp from '@/views/SignUp.vue';
 import Account from '@/views/Account.vue';
-import Analysis from '@/views/Analysis.vue';
+import UserAnalysis from '@/views/UserAnalysis.vue';
+import TweetAnalysis from '@/views/TweetAnalysis.vue';
 import BarChart from '@/views/graphs/BarChart.vue';
 import SearchHistory from '@/views/SearchHistory.vue';
+import TweetSaved from '@/views/TweetSaved.vue';
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/home',
+    path: '/',
     name: 'Home',
     component: Home
   },
@@ -35,15 +37,27 @@ const routes = [
     meta: {requiresAuth: true}
   },
   {
-    path: '/analysis',
-    name: 'Analysis',
-    component: Analysis,
+    path: '/useranalysis',
+    name: 'UserAnalysis',
+    component: UserAnalysis,
     meta: {requiresAuth: true}
   },
   {
     path: '/searchhistory',
     name: 'SearchHistory',
     component: SearchHistory,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/tweetanalysis',
+    name: 'TweetAnalysis',
+    component: TweetAnalysis,
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/tweetsaved',
+    name: 'TweetSaved',
+    component: TweetSaved,
     meta: {requiresAuth: true}
   },
   {

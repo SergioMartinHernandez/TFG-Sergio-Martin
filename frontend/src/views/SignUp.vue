@@ -40,26 +40,6 @@
             </div>
             <div class="row"> 
               <div class="col-6"></div>
-               <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAccountModal">Delete account</button> 
-                 <div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="ModalLabel">Delete account</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        Are you sure to delete the account?
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="deleteAccount()">Confirm</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               <div id="button-submit" class="col"> <button type="submit" class="btn btn-primary">Sign up</button> </div> 
               <div id="button-cancel" class="col"> <button type="button" class="btn btn-dark" @click="$router.push('/home')">Cancel</button> </div>  
             </div> 
@@ -94,7 +74,7 @@ export default {
     async submit() {
       try {
         //await signUp(this.user);
-        this.$router.push('/home');
+        this.$router.push('/');
       } catch (error) {
         throw 'Username already exists. Please try again.';
       }

@@ -24,6 +24,11 @@ axios.defaults.baseURL = 'http://localhost:8000/';  // Direccion del backend
 //     }
 //   }
 // });
+try {
+  window.$ = window.jQuery = require('jquery');
+  window.Popper = require('popper.js').default;
+  require('bootstrap');
+} catch (e) {}
 
 new Vue({
   router,
