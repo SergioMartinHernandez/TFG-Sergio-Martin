@@ -17,6 +17,7 @@ def search_tweets(db: Session, query:str, search_id: int):
     for tweet in tweets.data:
         if users[tweet.author_id]:
             user = users[tweet.author_id]
+            tweetssearch['url'] = 'https://twitter.com/{}/status/{}'.format(user.username, tweet['id'])
             tweetssearch["text"] = tweet.text
             tweetssearch["author"] = user.username
             tweetssearch["created_at"] = tweet.created_at
@@ -72,7 +73,7 @@ def search_user(db: Session, username:str, search_id: int):
     #     raise Exception(response2.status_code, response2.text)
         
     # print(response2.json())
-
+    username=username.replace(" ", "")
     client = tweepy.Client(bearer_token=BEARER_TOKEN)
     user = client.get_user(username=username,user_fields=['created_at','description','location','name','profile_image_url','public_metrics','username','verified'])
     userssearch = {}
@@ -98,6 +99,7 @@ def search_user(db: Session, username:str, search_id: int):
     for tweet in tweets.data:
         if users[tweet.author_id]:
             user = users[tweet.author_id]
+            tweetssearch['url'] = 'https://twitter.com/{}/status/{}'.format(user.username, tweet['id'])
             tweetssearch["text"] = tweet.text
             tweetssearch["author"] = user.username
             tweetssearch["created_at"] = tweet.created_at

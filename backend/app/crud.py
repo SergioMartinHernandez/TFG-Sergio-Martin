@@ -47,7 +47,10 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 def update_user(db: Session, user_id: int, updated_fields: schemas.UserUpdate):
     db_user = get_user(db, user_id)
-    db_user.hashed_password = pwd_context.hash(updated_fields.password)
+    if updated_fields.password is not None:
+        db_user.hashed_password = pwd_context.hash(updated_fields.password)
+    if updated_fields.image is not None:
+        db_user.image = updated_fields.image
     db.commit()
     db.refresh(db_user)
     return db_user

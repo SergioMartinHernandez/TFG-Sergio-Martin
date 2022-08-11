@@ -16,7 +16,7 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     created_at = Column(String, default=str(date.today())) 
-    is_active = Column(Boolean, default=True)
+    image = Column(String, default="https://www.dreamstime.com/default-avatar-profile-icon-vector-user-image-image179582665")
 
     searchs = relationship("Search", back_populates="owner")
     #tweetsaves = relationship("TweetSearch", back_populates="tweetowner")
@@ -44,6 +44,7 @@ class TweetSearch(Base):
     __tablename__ = "tweetsearch"
 
     id = Column(Integer, primary_key=True, index=True)
+    url= Column(String, index=True)
     text = Column(String, index=True)
     author = Column(String, index=True)
     created_at = Column(Date, index=True)

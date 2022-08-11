@@ -22,7 +22,7 @@ SECRET_KEY = "0442fceb275663041ca1a2d8be1c0ac5b07c650f7c433bc73176125e09f15b5e"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 # SE DECLARA LA APLICACION Y SE CONFIGURA
 app = FastAPI()

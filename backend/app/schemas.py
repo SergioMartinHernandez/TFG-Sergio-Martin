@@ -6,6 +6,7 @@ from typing import List, Optional
 
 # Creacion del objeto
 class TweetSearchBase(BaseModel):
+    url: str
     text: str
     author: str
     created_at: date
@@ -89,8 +90,8 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    is_active: bool
     created_at: str
+    image: str
     searchs: list[Search] = []
     #tweetsaves: list[TweetSearch] = []
 
@@ -103,6 +104,7 @@ class UserInDB(UserBase):
 
 class UserUpdate(BaseModel):
     password: Optional[str]
+    image: Optional[str]
 
     class Config:
         orm_mode = True
