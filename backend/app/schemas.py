@@ -69,9 +69,8 @@ class SearchCreate(SearchBase):
 class Search(SearchBase):
     id: int
     owner_id: int
-
-    tweetSearch: list[TweetSearch] = []
-    userSearch: list[UserSearch] = []
+    tweets: list[TweetSearch] = []
+    user: list[UserSearch] = []
 
     class Config:
         orm_mode = True
@@ -93,7 +92,7 @@ class User(UserBase):
     created_at: str
     image: str
     searchs: list[Search] = []
-    #tweetsaves: list[TweetSearch] = []
+    tweets_saved: list[TweetSearch]
 
     class Config:
         orm_mode = True
@@ -109,7 +108,7 @@ class UserUpdate(BaseModel):
     class Config:
         orm_mode = True
 
-# PARA LA AUTENTIFICACION 
+# Para la autentificacion de los usuarios 
 class Token(BaseModel):
     access_token: str
     token_type: str

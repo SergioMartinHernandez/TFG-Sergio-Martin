@@ -1,28 +1,10 @@
+from array import array
 from datetime import date
 from email.policy import default
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import relationship
 
 from database import Base
-
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    first_name = Column(String, index=True)
-    last_name = Column(String, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    created_at = Column(String, default=str(date.today())) 
-    image = Column(String, default="https://www.dreamstime.com/default-avatar-profile-icon-vector-user-image-image179582665")
-
-    searchs = relationship("Search", back_populates="owner")
-    #tweetsaves = relationship("TweetSearch", back_populates="tweetowner")
-
-    def __getuser__(self, i):
-        return f"Value {i}"
 
 
 class Search(Base):
@@ -33,9 +15,9 @@ class Search(Base):
     type = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
 
-    owner = relationship("User", back_populates="searchs")
-    tweetsearchs = relationship("TweetSearch", back_populates="owner")
-    usersearchs = relationship("UserSearch", back_populates="owner")
+    ownersearch = relationship("User", back_populates="searchs")
+    tweetsearchs = relationship("TweetSearch", back_populates="ownertweetsearch")
+    usersearchs = relationship("UserSearch", back_populates="ownerusersearch")
 
     def __getsearch__(self, i):
         return f"Value {i}"
@@ -55,9 +37,8 @@ class TweetSearch(Base):
     lang = Column(String, index=True)
     source = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("search.id"))
-    #usersave_id = Column(Integer, ForeignKey("user.id"))
 
-    owner = relationship("Search", back_populates="tweetsearchs")
+    ownertweetsearch = relationship("Search", back_populates="tweetsearchs")
     #tweetowner = relationship("User", back_populates="tweetsaves")
 
     def __gettweetsearch__(self, i):
@@ -80,7 +61,26 @@ class UserSearch(Base):
     verified = Column(Boolean, default=False)
     owner_id = Column(Integer, ForeignKey("search.id"))
 
-    owner = relationship("Search", back_populates="usersearchs")
+    ownerusersearch = relationship("Search", back_populates="usersearchs")
 
     def __getusersearch__(self, i):
+        return f"Value {i}"
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    first_name = Column(String, index=True)
+    last_name = Column(String, index=True)
+    email = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
+    created_at = Column(String, default=str(date.today())) 
+    image = Column(String, default="https://www.dreamstime.com/default-avatar-profile-icon-vector-user-image-image179582665")
+    tweets_saved = list()
+
+    searchs = relationship("Search", back_populates="ownersearch")
+    #tweetsaves = relationship("TweetSearch", back_populates="tweetowner")
+
+    def __getuser__(self, i):
         return f"Value {i}"
