@@ -9,11 +9,14 @@
 
 <script>
 import NavBar from '/src/components/NavBar.vue'
+import BarChart from '/src/components/BarChart.vue'
 export default {
   components: {
-    NavBar
+    NavBar,
+    BarChart 
   }
 }
+
 </script>
 
 <style>

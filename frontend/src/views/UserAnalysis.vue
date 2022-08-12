@@ -43,7 +43,7 @@
         </div>
         <div class="row">
             <div class="col">
-              grafica 1
+              <Bar v-if="loaded" :chart-data="chartData" />
             </div>
             <div class="col">
             Grafica 2
@@ -122,10 +122,28 @@
 
 
 <script>
-import BarChart from '@/views/graphs/BarChart.vue'
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 export default {
-  components: {
-    BarChart
+  name: 'BarChart',
+  components: { Bar },
+  data: () => ({
+    loaded: false,
+    chartData: null
+  }),
+  async mounted () {
+    this.loaded = false
+
+    try {
+      const { userlist } = await fetch('/api/userlist')
+      this.chartdata = userlist
+
+      this.loaded = true
+    } catch (e) {
+      console.error(e)
+    }
   }
 }
 </script>

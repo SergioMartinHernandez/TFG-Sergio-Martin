@@ -7,7 +7,6 @@ import SignUp from '@/views/SignUp.vue';
 import Account from '@/views/Account.vue';
 import UserAnalysis from '@/views/UserAnalysis.vue';
 import TweetAnalysis from '@/views/TweetAnalysis.vue';
-import BarChart from '@/views/graphs/BarChart.vue';
 import SearchHistory from '@/views/SearchHistory.vue';
 import TweetSaved from '@/views/TweetSaved.vue';
 
@@ -59,11 +58,6 @@ const routes = [
     name: 'TweetSaved',
     component: TweetSaved,
     meta: {requiresAuth: true}
-  },
-  {
-    path: '/bar',
-    name: 'Bar',
-    component: BarChart
   },
 
 ]
