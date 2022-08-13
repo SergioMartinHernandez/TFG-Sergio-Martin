@@ -2,9 +2,8 @@ from datetime import date, datetime
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 
-#FALTAN HACER UPDATE USER, DELETE USER, DELETE TWEETS SEARCH, DELETE USER SEARCHS
 
-# Creacion del objeto
+# Modelo Pydantic de Tweet buscado 
 class TweetSearchBase(BaseModel):
     url: str
     text: str
@@ -17,7 +16,7 @@ class TweetSearchBase(BaseModel):
     lang: str
     source: str
 
-
+# Modelo Pydantic de creacion Tweet buscado
 class TweetSearchCreate(TweetSearchBase):
     pass
 
@@ -31,6 +30,7 @@ class TweetSearch(TweetSearchBase):
 
 
 
+# Modelo Pydantic de usuario buscado 
 class UserSearchBase(BaseModel):
     created_at: date
     description: str
@@ -44,11 +44,11 @@ class UserSearchBase(BaseModel):
     username: str
     verified: bool
 
-
+# Modelo Pydantic de creacion usuario buscado
 class UserSearchCreate(UserSearchBase):
     pass
 
-
+# Recuperacion del objeto del API ya añadiendo los campos que no se sabian en la creacion
 class UserSearch(UserSearchBase):
     id: int
     owner_id: int
@@ -57,15 +57,16 @@ class UserSearch(UserSearchBase):
         orm_mode = True
 
 
+# Modelo Pydantic de busqueda 
 class SearchBase(BaseModel):
     title: str
     type: str
 
-
+# Modelo Pydantic de creacion de busqueda
 class SearchCreate(SearchBase):
     pass
 
-
+# Recuperacion del objeto del API ya añadiendo los campos que no se sabian en la creacion
 class Search(SearchBase):
     id: int
     owner_id: int
@@ -76,17 +77,18 @@ class Search(SearchBase):
         orm_mode = True
 
 
+# Modelo Pydantic de usuario
 class UserBase(BaseModel):
     username: str
     first_name: str
     last_name: str
     email: EmailStr
 
-
+# Modelo Pydantic de creacion de usuario
 class UserCreate(UserBase):
     password: str
 
-
+# Recuperacion del objeto del API ya añadiendo los campos que no se sabian en la creacion
 class User(UserBase):
     id: int
     created_at: str
@@ -97,10 +99,11 @@ class User(UserBase):
     class Config:
         orm_mode = True
 
+# Modelo Pydantic de usuario con contraseña hash
 class UserInDB(UserBase):
     hashed_password: str
 
-
+# Modelo Pydantic de actualizacion de usuario
 class UserUpdate(BaseModel):
     password: Optional[str]
     image: Optional[str]
@@ -108,7 +111,8 @@ class UserUpdate(BaseModel):
     class Config:
         orm_mode = True
 
-# Para la autentificacion de los usuarios 
+
+# Modelo Pydantic para la autentificacion de los usuarios 
 class Token(BaseModel):
     access_token: str
     token_type: str

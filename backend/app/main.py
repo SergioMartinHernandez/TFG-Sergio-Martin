@@ -1,3 +1,4 @@
+from os import access
 from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,10 +8,10 @@ from datetime import datetime, timedelta
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from pydantic import BaseModel
+from passlib.context import CryptContext
 
 import crud, models, schemas, searchs
 from database import SessionLocal, engine
-from security import pwd_context
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -52,18 +53,9 @@ async def db_session_middleware(request: Request, call_next):
     return response
 
 
-# Dependency
+# Dependencia de base de datos
 def get_db(request: Request):
     return request.state.db
-
-#FALTAN HACER UPDATE USER, DELETE USER, DELETE TWEETS SEARCH, DELETE USER SEARCHS
-
-# @app.post("/createuser/", response_model=schemas.User)
-# def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-#     db_user = crud.get_user_by_username(db, username=user.username)
-#     if db_user:
-#         raise HTTPException(status_code=400, detail="Username already registered")
-#     return crud.create_user(db=db, user=user)
 
 # Borra un usuario de la base de datos
 @app.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -184,6 +176,7 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Username already registered")
     return crud.create_user(db=db, user=user)
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Funciones para la autentificacion del usuario
 def verify_password(plain_password, hashed_password):
@@ -213,7 +206,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 # Funcion para obtener el usuario actual
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -232,12 +225,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         raise credentials_exception
     return user
 
-async def get_current_active_user(current_user: schemas.User = Depends(get_current_user)):
-    return current_user
-
 # Inicia sesion en un usuario registrado
 @app.post("/login", response_model=schemas.Token)
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db) ):
+async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -252,6 +242,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
     return {"access_token": access_token, "token_type": "bearer"}
 
 # Obtiene el usuario que esta utilizando la aplicacion
-@app.get("/users/me/", response_model=schemas.User)
-async def read_users_me(current_user: schemas.User = Depends(get_current_active_user)):
+@app.get("/users/me/", response_model=schemas.UserInDB)
+async def read_users_me(current_user: schemas.UserInDB = Depends(get_current_user)):
     return current_user

@@ -1,11 +1,13 @@
 from sqlalchemy.orm import Session
 import bcrypt
 from sqlalchemy import update
-from security import pwd_context
+from passlib.context import CryptContext
 import requests
 import json
 
 import models, schemas
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Obtiene un usuario dado su id
 def get_user(db: Session, user_id: int):
@@ -28,8 +30,9 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 #     user = db.query(models.User).filter(models.User.username == username).first()
 #     return user
 def get_user_dict(db, username: str):
-    if db.query(models.User).filter(models.User.username == username).first() is not None:
-        user_dict = db[username]
+    user = db.query(models.User).filter(models.User.username == username).first()
+    if user is not None:
+        user_dict = user.__dict__
         return schemas.UserInDB(**user_dict)
 
 
