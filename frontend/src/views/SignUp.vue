@@ -41,7 +41,7 @@
             <div class="row"> 
               <div class="col-6"></div>
               <div id="button-submit" class="col"> <button type="submit" class="btn btn-primary">Sign up</button> </div> 
-              <div id="button-cancel" class="col"> <button type="button" class="btn btn-dark" @click="$router.push('/home')">Cancel</button> </div>  
+              <div id="button-cancel" class="col"> <button type="button" class="btn btn-dark" @click="$router.push('/')">Cancel</button> </div>  
             </div> 
             <div class="row">
               <div class="col-6"></div>
@@ -73,7 +73,7 @@ export default {
     ...mapActions(['signUp']),
     async submit() {
       try {
-        //await signUp(this.user);
+        await this.signUp(this.user);
         this.$router.push('/');
       } catch (error) {
         throw 'Username already exists. Please try again.';

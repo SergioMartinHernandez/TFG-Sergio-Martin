@@ -11,6 +11,7 @@ const getters = {
 
 const actions = {
   async signUp({dispatch}, form) {
+    console.log(form)
     await axios.post('signup', form);
     let UserForm = new FormData();
     UserForm.append('username', form.username);

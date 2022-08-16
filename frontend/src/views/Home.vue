@@ -1,9 +1,9 @@
 <template>
   <section>
     <div class="container">
-      <!-- <div v-if="isLoggedIn" id="logout"> -->
+      <div v-if="isLoggedIn" id="logout">
 
-        <!-- <p id="titulo">Proyecto de TFG de Sergio Martín Hernández</p>
+        <p id="titulo">Proyecto de TFG de Sergio Martín Hernández</p>
         <div id="search-bar" class="input-group mb-3">
           <select id="search-filter" class="selectpicker">
             <option>Tweet</option>
@@ -17,7 +17,7 @@
 
 
       </div> 
-      <div v-else>--->
+      <div v-else>
         <div class="row align-items-center">
           <div class="col-6">
             <img src="https://w7.pngwing.com/pngs/574/920/png-transparent-icon-twitter-emblem-logo-famous.png" class="img-fluid">
@@ -33,7 +33,7 @@
             </div>
           </div>
         </div>
-      <!-- </div> -->
+      </div>
     </div>
   </section>
 </template>

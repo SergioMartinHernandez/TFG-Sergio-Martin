@@ -79,7 +79,7 @@
                 </div>
               </div>
               <div id="button-submit" class="col"> <button type="submit" class="btn btn-primary">Confirm changes</button> </div> 
-              <div id="button-cancel" class="col"> <button type="button" class="btn btn-dark" @click="$router.push('/home')">Cancel</button> </div>  
+              <div id="button-cancel" class="col"> <button type="button" class="btn btn-dark" @click="$router.push('/')">Cancel</button> </div>  
             </div> 
           </form>   
         </div>
@@ -104,7 +104,7 @@ export default {
       try {
         await this.deleteUser(this.user.id);
         await this.$store.dispatch('logOut');
-        this.$router.push('/home');
+        this.$router.push('/');
       } catch (error) {
         console.error(error);
       }

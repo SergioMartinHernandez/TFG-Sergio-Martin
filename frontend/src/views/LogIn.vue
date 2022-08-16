@@ -25,7 +25,7 @@
             <div class="row"> 
               <div class="col-6"></div>
               <div id="button-submit" class="col"> <button type="submit" class="btn btn-primary">Log in</button> </div> 
-              <div id="button-cancel" class="col"> <button type="button" class="btn btn-dark" @click="$router.push('/home')">Cancel</button> </div>  
+              <div id="button-cancel" class="col"> <button type="button" class="btn btn-dark" @click="$router.push('/')">Cancel</button> </div>  
             </div> 
             <div class="row">
               <div class="col-4"></div>
@@ -58,7 +58,7 @@ export default {
             User.append('username', this.form.username);
             User.append('password', this.form.password);
             await this.logIn(User);
-            this.$router.push('/home');
+            this.$router.push('/');
         } catch (error) {
             throw 'There was a problem logging in. Check email and password.';
         }  
