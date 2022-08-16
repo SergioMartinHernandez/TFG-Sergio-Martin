@@ -1,3 +1,4 @@
+from msilib import schema
 from os import access
 from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
 from sqlalchemy.orm import Session
@@ -9,6 +10,31 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from pydantic import BaseModel
 from passlib.context import CryptContext
+
+
+from typing import Optional
+import base64
+from passlib.context import CryptContext
+from datetime import datetime, timedelta
+
+
+from pydantic import BaseModel
+
+from fastapi import Depends, FastAPI, HTTPException
+from fastapi.encoders import jsonable_encoder
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2
+from fastapi.security.base import SecurityBase
+from fastapi.security.utils import get_authorization_scheme_param
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
+from fastapi.openapi.utils import get_openapi
+
+from starlette.status import HTTP_403_FORBIDDEN
+from starlette.responses import RedirectResponse, Response, JSONResponse
+from starlette.requests import Request
+
+
+
 
 import crud, models, schemas, searchs
 from database import SessionLocal, engine
@@ -23,9 +49,63 @@ SECRET_KEY = "0442fceb275663041ca1a2d8be1c0ac5b07c650f7c433bc73176125e09f15b5e"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+class OAuth2PasswordBearerCookie(OAuth2):
+    def __init__(
+        self,
+        tokenUrl: str,
+        scheme_name: str = None,
+        scopes: dict = None,
+        auto_error: bool = True,
+    ):
+        if not scopes:
+            scopes = {}
+        flows = OAuthFlowsModel(password={"tokenUrl": tokenUrl, "scopes": scopes})
+        super().__init__(flows=flows, scheme_name=scheme_name, auto_error=auto_error)
 
-# SE DECLARA LA APLICACION Y SE CONFIGURA
+    async def __call__(self, request: Request) -> Optional[str]:
+        header_authorization: str = request.headers.get("Authorization")
+        cookie_authorization: str = request.cookies.get("Authorization")
+
+        header_scheme, header_param = get_authorization_scheme_param(
+            header_authorization
+        )
+        cookie_scheme, cookie_param = get_authorization_scheme_param(
+            cookie_authorization
+        )
+
+        print("header_scheme")
+        print(header_scheme)
+
+        print("cookie_scheme")
+        print(cookie_scheme)
+
+        if header_scheme.lower() == "bearer":
+            authorization = True
+            scheme = header_scheme
+            param = header_param
+
+        elif cookie_scheme.lower() == "bearer":
+            authorization = True
+            scheme = cookie_scheme
+            param = cookie_param
+
+        else:
+            authorization = False
+
+        print(authorization)
+        
+        if not authorization or scheme.lower() != "bearer":
+            if self.auto_error:
+                raise HTTPException(
+                    status_code=HTTP_403_FORBIDDEN, detail="Not authenticated"
+                )
+            else:
+                return None
+        return param
+
+oauth2_scheme = OAuth2PasswordBearerCookie(tokenUrl="login", scheme_name="JWT")
+
+# Se declara la aplicacion y se configura
 app = FastAPI()
 
 origins = [
@@ -41,7 +121,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# SE CREA EL MIDDLEWARE Y SE AÑADE
 @app.middleware("http")
 async def db_session_middleware(request: Request, call_next):
     response = Response("Internal server error", status_code=500)
@@ -176,6 +255,11 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Username already registered")
     return crud.create_user(db=db, user=user)
 
+
+
+
+
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Funciones para la autentificacion del usuario
@@ -191,6 +275,8 @@ def authenticate_user(db, username: str, password: str):
         return False
     if not verify_password(password, user.hashed_password):
         return False
+    print(password,user.hashed_password)
+    print("entrado en constrasena verificada")
     return user
 
 
@@ -198,10 +284,12 @@ def authenticate_user(db, username: str, password: str):
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.now() + timedelta(minutes=15)
+    print(expire)
     to_encode.update({"exp": expire})
+    print(to_encode)
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -220,12 +308,30 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         token_data = schemas.TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = crud.get_user_dict(db, username=token_data.username)
+    user = crud.get_user_by_username(db, username=token_data.username)
     if user is None:
         raise credentials_exception
     return user
 
 # Inicia sesion en un usuario registrado
+# @app.post("/login", response_model=schemas.Token)
+# async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+#     user = authenticate_user(db, form_data.username, form_data.password)
+#     if not user:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Incorrect username or password",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#     print("usuario en el post /login")
+#     print(user.username)
+#     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+#     access_token = create_access_token(
+#         data={"sub": user.username, "type": "access_token"}, expires_delta=access_token_expires
+#     )
+#     return {"access_token": access_token, "token_type": "bearer"}
+
+
 @app.post("/login", response_model=schemas.Token)
 async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(db, form_data.username, form_data.password)
@@ -235,13 +341,27 @@ async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestF
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    token = jsonable_encoder(access_token)
+    content = {"message": "You've successfully logged in. Welcome back!"}
+    response = JSONResponse(content=content)
+    response.set_cookie(
+        "Authorization",
+        value=f"Bearer {token}",
+        httponly=True,
+        max_age=1800,
+        expires=1800,
+        samesite="Lax",
+        secure=False,
+    ) 
+    return response
 
 # Obtiene el usuario que esta utilizando la aplicacion
-@app.get("/users/me/", response_model=schemas.UserInDB)
-async def read_users_me(current_user: schemas.UserInDB = Depends(get_current_user)):
+@app.get("/users/me/", response_model=schemas.User)
+async def read_users_me(current_user: schemas.User = Depends(get_current_user)):
     return current_user
+
