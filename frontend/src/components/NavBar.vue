@@ -10,23 +10,14 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarWeb">
-          <!-- <ul v-if="isLoggedIn" class="navbar-nav"> -->
+          <ul v-if="isLoggedIn" class="navbar-nav">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item active">
                 <a class="nav-link" href="/">Home</a>
               </li>
               <ul class="navbar-nav mr-auto" id="options-navbar">
                 <li class="nav-item active">
-                  <a class="nav-link" href="/account">Account</a>
-                </li>
-                <li class="nav-item active">
-                  <a class="nav-link" href="/searchhistory">Search History</a>
-                </li>
-                <li class="nav-item active">
                   <a class="nav-link" href="/tweetsaved">Tweets Saved</a>
-                </li>
-                <li class="nav-item active">
-                  <a class="nav-link" @click="logout">Log Out</a>
                 </li>
                 <li class="nav-item active">
                 <a class="nav-link" href="/useranalysis">User Analysis</a>
@@ -40,6 +31,7 @@
                   </a>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/account">Account</a>
+                    <a class="dropdown-item" href="/searchhistory">Search History</a>
                     <a class="dropdown-item" href="/myTweets">Tweets Saved</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" @click="logout">Log Out</a>
@@ -47,21 +39,21 @@
                 </li>
               </ul>   
             </ul>
-          <!-- </ul> -->
-          <!-- DESCOMENTAR CUANDO SE SOLUCIONE EL PROBLEMA DE LA CREACION DE USUARIOS -->
-          <!-- <ul v-else class="navbar-nav">
-              <button class="btn btn-sm btn-outline-dark float-right" type="button" @click="$router.push('/login')">Log in</button>
-              <button class="btn btn-dark float-right" type="button" @click="$router.push('/signup')">Sign up</button>
-          </ul> -->
+          </ul>
+          <ul v-else class="navbar-nav ml-auto flex-nowrap">
+              <li class="nav-item active">
+                <a class="nav-link" href="/login">Log in</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/signup">Sign up</a>
+              </li>
+          </ul>
         </div>
     </nav>
-    
   </header>
-  
 </template>
 
 <script>
-
 export default {
   name: 'NavBar',
   computed: {

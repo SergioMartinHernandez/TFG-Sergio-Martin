@@ -3,9 +3,9 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col">
-            <img class="rounded-circle img-fluid" src="https://naldzgraphics.net/wp-content/uploads/2017/02/22-graphic-UI-illustration.jpg" alt="Responsive image">
+            <img class="rounded-circle img-fluid" :src="user.image" alt="Responsive image">
             <label class="form-label" for="newProfileImage">Change profile image</label>
-            <input type="file" class="form-control" id="newProfileImage" />
+             <input type="text" name="profileImage" v-model="formUserUpdate.image" placeholder="URL new profile image" class="form-control" />
         </div>
         <div class="col-8">
           <form @submit.prevent="submit">
@@ -42,17 +42,17 @@
             <div class="form-group row">
               <div class="col m-3">
               <label for="password" class="form-label">Old password:</label>
-              <input type="password" name="password" placeholder="Password" v-model="user.password" class="form-control" />
+              <input type="password" name="password" placeholder="Password" v-model="formUserUpdate.oldpassword" class="form-control" />
               </div>
             </div>
             <div class="form-group row">
               <div class="col m-3">
               <label for="newpassword" class="form-label">New password:</label>
-              <input type="password" name="newpassword" placeholder="New password" class="form-control" />
+              <input id="newpassword" type="password" name="newpassword" v-model="formUserUpdate.password" placeholder="New password" class="form-control" />
               </div>
               <div class="col m-3">
               <label for="newpassword2" class="form-label">Confirm new password:</label>
-              <input type="password" name="newpassword2" placeholder="Confirm new password" class="form-control" />
+              <input id="newpassword2" type="password" name="newpassword2" placeholder="Confirm new password" class="form-control" />
               </div>
             </div>
             <div class="row"> 
@@ -92,6 +92,15 @@
 import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'Account',
+  data() {
+    return {
+      formUserUpdate: {
+        image: '',
+        oldpassword: '',
+        password: '',
+      },
+    };
+  },
   created: function() {
     return this.$store.dispatch('viewMe');
   },
@@ -99,7 +108,7 @@ export default {
     ...mapGetters({user: 'stateUser' }),
   },
   methods: {
-    ...mapActions(['deleteUser']),
+    ...mapActions(['deleteUser', 'updateUser']),
     async deleteAccount() {
       try {
         await this.deleteUser(this.user.id);
@@ -108,6 +117,26 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    async submit() {
+        const newpassword = document.getElementById("newpassword").value;
+        const newpassword2 = document.getElementById("newpassword2").value;
+        // console.log(newpassword)
+        // console.log(newpassword2)
+        if(newpassword == newpassword2) {
+             try {
+              let updatedUser = {
+                image: this.formUserUpdate.image,
+                password: this.formUserUpdate.password,
+                oldpassword: this.formUserUpdate.oldpassword,
+              };
+              console.log(updatedUser)
+              await this.updateUser(updatedUser);
+              this.$router.push('/');
+            } catch (error) {
+              console.log(error);
+            }
+        }
     }
   },
 }

@@ -9,11 +9,9 @@
 
 <script>
 import NavBar from '/src/components/NavBar.vue'
-import BarChart from '/src/components/BarChart.vue'
 export default {
   components: {
-    NavBar,
-    BarChart 
+    NavBar
   }
 }
 
@@ -23,7 +21,7 @@ export default {
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   background-color: #0d6efd;
-  height: 100%;
+  min-height: 100vh;
 }
 
 body, main {

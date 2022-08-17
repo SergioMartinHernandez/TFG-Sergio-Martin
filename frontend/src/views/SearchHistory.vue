@@ -1,41 +1,36 @@
 <template>
   <section>
-    <div class="container align-items-center">
-             <div class="row">
-              <label id="label-history">Search History</label>
-            </div>
-      <div class="row">
-             <li v-for="(item, index) in items">
-        		{{ parentMessage }} - {{ index }} - {{ item.message }}
-      </li>
-            </div>
-      
+    <div class="container">
+      <div v-for="search in user.searchs" :key="search.id">
+        {{ search.title }}
+        {{ search.type }}
+      </div>
     </div>
   </section>
 </template>
 
+
 <script>
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
-  data() {
-  	return {
-	    parentMessage: 'Parent',
-    	items: [{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' },{ message: 'Foo' }, { message: 'Bar' }, { message: 'Foo' }, { message: 'Bar' }]
-  	}
-	}
+  name: 'SearchHistory',
+  created: function() {
+    return this.$store.dispatch('viewMe');
+  },
+  computed: {
+    ...mapGetters({user: 'stateUser' }),
+  },
+  methods: {
+  },
+
 }
 </script>
 
 <style>
-  .container{
+.container{
     margin-top: 3%;
     padding: 5em;
     background-color: aliceblue;
-  }
-  #label-history {
-    margin-left: 16px;
-    font-size: x-large;
-    font-family: unset;
-  }
+}
 </style>
-
-

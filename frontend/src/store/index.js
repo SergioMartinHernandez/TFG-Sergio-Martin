@@ -2,15 +2,15 @@ import createPersistedState from "vuex-persistedstate";
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-//import tweets from './modules';
-import users from './modules';
+import users from './user';
+//import searchs from './searchs';
 
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    //tweets,
+    //searchs,
     users,
   },
   plugins: [createPersistedState()]

@@ -5,13 +5,15 @@
 
         <p id="titulo">Proyecto de TFG de Sergio Martín Hernández</p>
         <div id="search-bar" class="input-group mb-3">
-          <select id="search-filter" class="selectpicker">
+          <select id="search-filter" v-model="search.type" class="selectpicker">
             <option>Tweet</option>
             <option>User</option>
           </select>
-          <input id="search-input" type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
+          <input id="search-input" type="text" v-model="search.title" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
           <button id="search-button" type="button" class="btn btn-primary" @click="SaveSearch()">
-            <i class="fas fa-search"></i>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
           </button>
         </div> 
 
@@ -40,39 +42,47 @@
 
 
 <script>
-
+import { mapActions } from 'vuex';
 export default {
   name: 'Home',
+  data(){
+    return {
+      search: {
+        title: '',
+        type: '',
+      }
+    };
+  },
   computed : {
     isLoggedIn: function() {
       return this.$store.getters.isAuthenticated;
     }
   },
   methods: {
-    SaveSearch: function() {
+    ...mapActions(['createSearch']),
+    async SaveSearch() {
       //const searchInput = document.getElementById("search-input");
       //const inputValue = searchInput.value;
-      const searchvalue = document.getElementById("search-filter").value;
-      if(searchvalue=="Tweet") {
-        //document.getElementById("view").innerHTML =  searchvalue;
-        // HACER LLAMADA A LA FUNCION BUSCAR TWEET
+      // const searchvalue = document.getElementById("search-filter").value;
+      if(this.search.type=="Tweet") {
+        try {
+          this.createSearch(this.search);
+          this.$router.push('/tweetanalysis');
+        } catch (error) {
+          throw 'Error in create search tweet. Please try again.';
+        }
       }
       else {
-        //document.getElementById("view").innerHTML =  searchvalue;
-        // HACER LLAMADA A LA FUNCION BUSCAR USER
+        try {
+          this.createSearch(this.search);
+          this.$router.push('/useranalysis');
+        } catch (error) {
+          throw 'Error in create search user. Please try again.';
+        }
       }
-
-      //this.$router.push('/analysis')
     }
   }
 }
-
-// const searchButton = document.getElementById('search-button');
-// const searchInput = document.getElementById('search-input');
-// searchButton.addEventListener('click', () => {
-//   const inputValue = searchInput.value;
-//   console.log(inputValue);
-// });
 </script>
 
 <style scoped>
