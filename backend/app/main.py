@@ -135,19 +135,129 @@ async def db_session_middleware(request: Request, call_next):
 def get_db(request: Request):
     return request.state.db
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# Funciones para la autentificacion del usuario
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+def authenticate_user(db, username: str, password: str):
+    user = crud.get_user_dict(db, username)
+    if not user:
+        return False
+    if not verify_password(password, user.hashed_password):
+        return False
+    return user
+
+
+# Función de utilidad para generar un nuevo token de acceso
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now() + expires_delta
+    else:
+        expire = datetime.now() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+# Funcion para obtener el usuario actual
+async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        token_data = schemas.TokenData(username=username)
+    except JWTError:
+        raise credentials_exception
+    user = crud.get_user_by_username(db, username=token_data.username)
+    if user is None:
+        raise credentials_exception
+    return user
+
+# Inicia sesion en un usuario registrado
+# @app.post("/login", response_model=schemas.Token)
+# async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+#     user = authenticate_user(db, form_data.username, form_data.password)
+#     if not user:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Incorrect username or password",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#     print("usuario en el post /login")
+#     print(user.username)
+#     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+#     access_token = create_access_token(
+#         data={"sub": user.username, "type": "access_token"}, expires_delta=access_token_expires
+#     )
+#     return {"access_token": access_token, "token_type": "bearer"}
+
+# Crea un nuevo usuario
+@app.post("/signup", response_model=schemas.User)
+def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_username(db, username=user.username)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Username already registered")
+    return crud.create_user(db=db, user=user)
+
+# Inicia sesion en un usuario registrado
+@app.post("/login", response_model=schemas.Token)
+async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(db, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    token = jsonable_encoder(access_token)
+    content = {"message": "You've successfully logged in. Welcome back!"}
+    response = JSONResponse(content=content)
+    response.set_cookie(
+        "Authorization",
+        value=f"Bearer {token}",
+        httponly=True,
+        max_age=1800,
+        expires=1800,
+        samesite="Lax",
+        secure=False,
+    ) 
+    return response
+
+# Obtiene el usuario que esta utilizando la aplicacion
+@app.get("/users/me/", response_model=schemas.User)
+async def read_users_me(current_user: schemas.User = Depends(get_current_user)):
+    return current_user
+
 # Borra un usuario de la base de datos
-@app.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/deleteUser/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     user = crud.get_user(db, user_id)
     return crud.delete_user(db=db,user=user)
 
 # Actualiza los campos cambiados de un usuarios que se encuentra en la base de datos
-@app.patch("/users/{user_id}", response_model=schemas.UserUpdate)
+@app.patch("/updateUser", response_model=schemas.UserUpdate)
 def update_user(
-    user_id: int,
     updated_fields: schemas.UserUpdate,
     db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_user)
 ):
+    user_id = current_user.id
     return crud.update_user(db, user_id, updated_fields)
 
 # Recupera todos los usuarios de la base de datos
@@ -165,11 +275,13 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 # Crea una busqueda para un usuario
-@app.post("/users/{user_id}/search/", response_model=schemas.Search)
+@app.post("/user/search/", response_model=schemas.Search)
 def create_search_for_user(
-    user_id: int, search: schemas.SearchCreate, db: Session = Depends(get_db)
+    search: schemas.SearchCreate, 
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(get_current_user)
 ):
-    searchquery = crud.create_user_search(db=db, search=search, user_id=user_id)
+    searchquery = crud.create_user_search(db=db, search=search, user_id=current_user.id)
     if search.type == "tweet":
         # hacer busqueda de TweetSearch
         searchs.search_tweets(db=db, query=searchquery.title, search_id=searchquery.id)
@@ -185,8 +297,9 @@ def read_searchs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     return searchs
 
 # Recupera los tweets buscados en una busqueda concreta
-@app.get("/{search_id}/tweets", response_model=list[schemas.TweetSearch])
-def get_tweets_of_search(search_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+@app.get("/search/tweets", response_model=list[schemas.TweetSearch])
+def get_tweets_of_search(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+    search_id = current_user.searchs[-1].id
     tweets = crud.get_tweets_of_search(db, skip=skip, limit=limit, search_id=search_id)
     return tweets
 
@@ -241,126 +354,8 @@ def read_user_searchs(skip: int = 0, limit: int = 100, db: Session = Depends(get
     return usersearchs
 
 # Recupera el usuario buscado en una busqueda concreta
-@app.get("/{search_id}/user", response_model=schemas.UserSearch)
-def get_user_of_search(search_id: int, db: Session = Depends(get_db)):
+@app.get("/search/user/", response_model=schemas.UserSearch)
+def get_user_of_search(db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+    search_id = current_user.searchs[-1].id
     user = crud.get_user_of_search(db, search_id=search_id)
     return user
-
-# Crea un nuevo usuario
-@app.post("/signup", response_model=schemas.User)
-def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_username(db, username=user.username)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Username already registered")
-    return crud.create_user(db=db, user=user)
-
-
-
-
-
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# Funciones para la autentificacion del usuario
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-def authenticate_user(db, username: str, password: str):
-    user = crud.get_user_dict(db, username)
-    if not user:
-        return False
-    if not verify_password(password, user.hashed_password):
-        return False
-    print(password,user.hashed_password)
-    print("entrado en constrasena verificada")
-    return user
-
-
-# Función de utilidad para generar un nuevo token de acceso
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.now() + expires_delta
-    else:
-        expire = datetime.now() + timedelta(minutes=15)
-    print(expire)
-    to_encode.update({"exp": expire})
-    print(to_encode)
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-# Funcion para obtener el usuario actual
-async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-        token_data = schemas.TokenData(username=username)
-    except JWTError:
-        raise credentials_exception
-    user = crud.get_user_by_username(db, username=token_data.username)
-    if user is None:
-        raise credentials_exception
-    return user
-
-# Inicia sesion en un usuario registrado
-# @app.post("/login", response_model=schemas.Token)
-# async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
-#     user = authenticate_user(db, form_data.username, form_data.password)
-#     if not user:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Incorrect username or password",
-#             headers={"WWW-Authenticate": "Bearer"},
-#         )
-#     print("usuario en el post /login")
-#     print(user.username)
-#     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-#     access_token = create_access_token(
-#         data={"sub": user.username, "type": "access_token"}, expires_delta=access_token_expires
-#     )
-#     return {"access_token": access_token, "token_type": "bearer"}
-
-
-@app.post("/login", response_model=schemas.Token)
-async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(db, form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
-    )
-    token = jsonable_encoder(access_token)
-    content = {"message": "You've successfully logged in. Welcome back!"}
-    response = JSONResponse(content=content)
-    response.set_cookie(
-        "Authorization",
-        value=f"Bearer {token}",
-        httponly=True,
-        max_age=1800,
-        expires=1800,
-        samesite="Lax",
-        secure=False,
-    ) 
-    return response
-
-# Obtiene el usuario que esta utilizando la aplicacion
-@app.get("/users/me/", response_model=schemas.User)
-async def read_users_me(current_user: schemas.User = Depends(get_current_user)):
-    return current_user
-

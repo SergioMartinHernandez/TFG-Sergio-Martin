@@ -76,7 +76,7 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     created_at = Column(String, default=str(date.today())) 
-    image = Column(String, default="https://www.dreamstime.com/default-avatar-profile-icon-vector-user-image-image179582665")
+    image = Column(String, default="https://toppng.com/uploads/preview/instagram-default-profile-picture-11562973083brycehrmyv.png")
     tweets_saved = list()
 
     searchs = relationship("Search", back_populates="ownersearch")

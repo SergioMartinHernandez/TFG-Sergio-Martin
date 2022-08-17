@@ -123,6 +123,7 @@ class UserInDB(UserBase):
 
 # Modelo Pydantic de actualizacion de usuario
 class UserUpdate(BaseModel):
+    oldpassword: Optional[str]
     password: Optional[str]
     image: Optional[str]
 
@@ -137,10 +138,3 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
-
-
-
-
-
-
-

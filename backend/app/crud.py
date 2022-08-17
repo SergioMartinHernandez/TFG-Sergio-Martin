@@ -54,7 +54,8 @@ def create_user(db: Session, user: schemas.UserCreate):
 def update_user(db: Session, user_id: int, updated_fields: schemas.UserUpdate):
     db_user = get_user(db, user_id)
     if updated_fields.password is not None:
-        db_user.hashed_password = pwd_context.hash(updated_fields.password)
+        if pwd_context.verify(updated_fields.oldpassword, db_user.hashed_password):
+            db_user.hashed_password = pwd_context.hash(updated_fields.password)
     if updated_fields.image is not None:
         db_user.image = updated_fields.image
     db.commit()
@@ -93,7 +94,6 @@ def get_tweet_by_id(db: Session, tweetsearch_id: int):
 # Guarda un tweet en el perfil del usuario
 def save_tweet_user(db: Session, tweet: schemas.TweetSearch, user: schemas.User):
     user.tweets_saved.append(tweet)
-    #user.tweets_saved.append("hola")
     print(user.tweets_saved[0].text)
     db.commit()
     db.refresh(user)
