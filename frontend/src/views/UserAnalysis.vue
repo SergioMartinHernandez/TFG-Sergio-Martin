@@ -50,14 +50,16 @@
             <div class="col">
               Grafica 1
               <!-- <Bar v-if="loaded" :chart-data="chartData" /> -->
+              <!-- <Bar :chart-options="chartOptions" :chart-data="chartData"/> -->
             </div>
             <div class="col">
-            Grafica 2
+              Grafica 2
+              <Pie :chart-options="chartOptions" :chart-data="chartData"/>
             </div>
         </div>
         <div class="row">
-              <div class="row">
-                  <div v-for="tweet in tweetSearch" :key="tweet.id" class="card bg-light">
+              <div class="col">
+                  <div v-for="tweet in tweetSearch" class="card bg-light">
                     <div class="card-body">
                       <h6><strong>Username: </strong>{{ tweet.author }}</h6>
                       <!-- TEXTO TWEET -->
@@ -100,7 +102,7 @@
                           <a class="btn btn-primary" id="buttons-card" :href="tweet.url" role="button">Link</a>
                         </div>
                         <div class="col-lg-6">
-                          <input class="btn btn-primary" type="submit" value="Guardar tweet">
+                          <button id="saveTweetButton" class="btn btn-primary" type="button" @click="saveTweetUser(tweet.id)">Guardar tweet</button>
                         </div>
                       </div>
                     </div>  
@@ -113,25 +115,37 @@
 
 
 <script>
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import { Bar, Pie } from 'vue-chartjs/legacy'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement } from 'chart.js'
 import { mapGetters, mapActions } from 'vuex';
 
-//ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement)
+
 export default {
   name: 'UserAnalysis',
   created: function() {
     this.$store.dispatch('viewUserSearch');
     this.$store.dispatch('viewTweetSearch');
+
   },
   computed: {
     ...mapGetters({userSearch: 'stateUserSearch' }),
     ...mapGetters({tweetSearch: 'stateTweetSearch' }),
-    
   },
   methods: {
   },
-
+  name: 'SaveTweet',
+  methods: {
+    ...mapActions(['saveTweet']),
+    saveTweetUser(idTweet) {
+      try {
+        console.log(idTweet)
+        this.saveTweet(idTweet);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
   // name: 'BarChart',
   // components: { Bar },
   // data: () => ({
@@ -142,14 +156,52 @@ export default {
   //   this.loaded = false
 
   //   try {
-  //     const { userlist } = await fetch('/api/userlist')
-  //     this.chartdata = userlist
+  //     const value = [];
+  //     for(var tweet in this.tweetSearch) {
+  //         value[tweet] = this.tweetSearch[tweet].created_at;
+  //     }
 
+  //     console.log(value)
+  //     this.chartData = Object.assign({}, value);
+  //     console.log(this.chartData)
   //     this.loaded = true
   //   } catch (e) {
   //     console.error(e)
   //   }
-  // }
+  // },
+
+  name: 'BarChart',
+  components: { Bar },
+  data() {
+    return {
+      chartData: {
+        labels: [ 'January', 'February', 'March' ],
+        datasets: [ { data: [40, 20, 12] } ]
+      },
+      chartOptions: {
+        responsive: true
+      }
+    }
+  },
+  name: 'PieChart',
+  components: { Pie },
+  data() {
+    return {
+      chartData: {
+        labels: ['VueJs', 'EmberJs', 'ReactJs', 'AngularJs'],
+        datasets: [
+          {
+            backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+            data: [40, 20, 80, 10]
+          }
+        ]
+      },
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    }
+  }
 }
 </script>
 

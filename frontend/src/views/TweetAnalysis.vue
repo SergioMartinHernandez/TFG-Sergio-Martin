@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="row">
-              <div class="row">
+              <div class="col">
                   <div v-for="tweet in tweetSearch" :key="tweet.id" class="card bg-light">
                     <div class="card-body">
                       <h6><strong>Username: </strong>{{ tweet.author }}</h6>
@@ -55,7 +55,7 @@
                           <a class="btn btn-primary" id="buttons-card" :href="tweet.url" role="button">Link</a>
                         </div>
                         <div class="col-lg-6">
-                          <input class="btn btn-primary" type="submit" value="Guardar tweet">
+                          <button id="saveTweetButton" class="btn btn-primary" type="button" @click="saveTweet(tweet.id)">Guardar tweet</button>
                         </div>
                       </div>
                     </div>  
@@ -83,6 +83,15 @@ export default {
     
   },
   methods: {
+    ...mapActions(['saveTweet']),
+    saveTweetUser(idTweet) {
+      try {
+        console.log(idTweet)
+        this.saveTweet(idTweet);
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 
   // name: 'BarChart',

@@ -33,7 +33,6 @@ const actions = {
     await commit('setUser', data);
   },
   async updateUser({}, updatedUser) {
-    console.log(updatedUser)
     await axios.patch('updateUser/', updatedUser);
   },
   async deleteUser({}, id) {
@@ -45,7 +44,6 @@ const actions = {
   },
   async createSearch({},search) {
     await axios.post('user/search/', search);
-    //await dispatch('getNotes');
   },
   async viewUserSearch({commit}) {
     let {data} = await axios.get('search/user/');
@@ -54,7 +52,15 @@ const actions = {
   async viewTweetSearch({commit}) {
     let {data} = await axios.get('search/tweets/');
     await commit('setTweetSearch', data);
-  }
+  },
+  async saveTweet({}, idTweet) {
+    await axios.post(`/user/savetweet/${idTweet}`, idTweet);
+  },
+  async deleteTweet({}, idTweet) {
+    console.log("user.js")
+    console.log(idTweet)
+    await axios.delete(`/user/deletetweet/${idTweet}`);
+  },
 };
 
 const mutations = {
