@@ -184,24 +184,6 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         raise credentials_exception
     return user
 
-# Inicia sesion en un usuario registrado
-# @app.post("/login", response_model=schemas.Token)
-# async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
-#     user = authenticate_user(db, form_data.username, form_data.password)
-#     if not user:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Incorrect username or password",
-#             headers={"WWW-Authenticate": "Bearer"},
-#         )
-#     print("usuario en el post /login")
-#     print(user.username)
-#     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-#     access_token = create_access_token(
-#         data={"sub": user.username, "type": "access_token"}, expires_delta=access_token_expires
-#     )
-#     return {"access_token": access_token, "token_type": "bearer"}
-
 # Crea un nuevo usuario
 @app.post("/signup", response_model=schemas.User)
 def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
@@ -245,10 +227,11 @@ async def read_users_me(current_user: schemas.User = Depends(get_current_user)):
     return current_user
 
 # Borra un usuario de la base de datos
-@app.delete("/deleteUser/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/deleteUser/{user_id}", status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     user = crud.get_user(db, user_id)
-    return crud.delete_user(db=db,user=user)
+    crud.delete_user(db=db,user=user)
+    return None
 
 # Actualiza los campos cambiados de un usuarios que se encuentra en la base de datos
 @app.patch("/updateUser", response_model=schemas.UserUpdate)
@@ -304,20 +287,27 @@ def get_tweets_of_search(skip: int = 0, limit: int = 100, db: Session = Depends(
     return tweets
 
 # Guarda el tweet en el perfil del usuario
-@app.post("/{user_id}/savetweet/{tweet_id}", response_model=list[schemas.TweetSearch])
-def save_tweet_user(user_id: int, tweet_id: int, db: Session = Depends(get_db)):
+@app.post("/user/savetweet/{tweet_id}", response_model=list[schemas.TweetSearch])
+def save_tweet_user(tweet_id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
     tweet = crud.get_tweet_by_id(db, tweetsearch_id=tweet_id)
-    user = crud.get_user(db, user_id)
+    user = crud.get_user(db, current_user.id)
     tweets_saved = crud.save_tweet_user(db, user=user, tweet=tweet)
     return tweets_saved
 
 # Elimina el tweet del perfil del usuario
-@app.delete("/{user_id}/deletetweet/{tweet_id}", response_model=list[schemas.TweetSearch])
-def delete_tweet_user(user_id: int, tweet_id: int, db: Session = Depends(get_db)):
+@app.delete("/user/deletetweet/{tweet_id}", response_model=list[schemas.TweetSearch])
+def delete_tweet_user(tweet_id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
     tweet = crud.get_tweet_by_id(db, tweetsearch_id=tweet_id)
-    user = crud.get_user(db, user_id)
+    user = crud.get_user(db, current_user.id)
     tweets_saved = crud.delete_tweet_user(db, user=user, tweet=tweet)
     return tweets_saved
+
+# Recupera los tweets guardados del usuario
+@app.get("/user/tweetssaved/", response_model=list[schemas.TweetSearch])
+def get_tweets_saved(db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+    tweetsaved = crud.get_tweets_saved(db, current_user.id)
+    return tweetsaved
+
     
 # CREO QUE NO SE UTILIZA PARA NADA
 @app.post("/users/{search_id}/tweetsearch/", response_model=schemas.TweetSearch)

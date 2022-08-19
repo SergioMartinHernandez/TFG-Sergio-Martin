@@ -88,8 +88,6 @@ class SearchCreate(SearchBase):
 class Search(SearchBase):
     id: int
     owner_id: int
-    tweets: list[TweetSearch] = []
-    user: list[UserSearch] = []
 
     class Config:
         orm_mode = True
@@ -112,7 +110,7 @@ class User(UserBase):
     created_at: str
     image: str
     searchs: list[Search] = []
-    tweets_saved: list[TweetSearch]
+    # tweets_saved: list[TweetSearch]
 
     class Config:
         orm_mode = True

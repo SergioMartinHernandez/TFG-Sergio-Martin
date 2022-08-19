@@ -4,6 +4,8 @@ from sqlalchemy import update
 from passlib.context import CryptContext
 import requests
 import json
+import pickle
+import os
 
 import models, schemas
 
@@ -23,23 +25,11 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 # Obtiene un diccionario de usuarios
-# def get_user_dict(db: Session, username: str):
-#     #if db.query(models.User).filter(models.User.username == username).first() not null:
-#         #user_dict = db[username]
-#         #return schemas.UserInDB(**user_dict)
-#     user = db.query(models.User).filter(models.User.username == username).first()
-#     return user
 def get_user_dict(db, username: str):
     user = db.query(models.User).filter(models.User.username == username).first()
     if user is not None:
         user_dict = user.__dict__
         return schemas.UserInDB(**user_dict)
-
-
-# def get_user_me_dict(db: Session, username: str):
-#     if username in db:
-#         user_dict = db[username]
-#         return schemas.User(**user_dict)
 
 # Crea un usuario y lo añade a la base de datos
 def create_user(db: Session, user: schemas.UserCreate):
@@ -48,6 +38,11 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+
+    # Crea el fichero con los tweets guardados
+    route = "../tmp/" + str(db_user.id)
+    f = open(route, "w")
+    f.close()
     return db_user
 
 # Actualiza los campos de un usuario en la base de datos
@@ -64,6 +59,9 @@ def update_user(db: Session, user_id: int, updated_fields: schemas.UserUpdate):
 
 # Borra un usuario de la base de datos
 def delete_user(db: Session, user: schemas.User):
+    # Borra el fichero con los tweets guardados
+    route = "../tmp/" + str(user.id)
+    os.remove(route)
     db.delete(user)
     db.commit()
 
@@ -93,24 +91,67 @@ def get_tweet_by_id(db: Session, tweetsearch_id: int):
 
 # Guarda un tweet en el perfil del usuario
 def save_tweet_user(db: Session, tweet: schemas.TweetSearch, user: schemas.User):
-    user.tweets_saved.append(tweet)
-    print(user.tweets_saved[0].text)
-    db.commit()
-    db.refresh(user)
-    return user.tweets_saved
+    # Añade el tweet guardado al fichero
+    route = "../tmp/" + str(user.id)
+    f = open(route, "rb")
+    tweetSaved = []
+    while 1:
+        try:
+            tweetSaved.append(pickle.load(f))
+        except EOFError:
+            break
+    for tweets in tweetSaved:
+        if tweets.id == tweet.id:
+            return tweetSaved
+    f.close()
+
+    f = open(route, "ab")
+    pickle.dump(tweet, f)
+    f.close()
+    # db.commit()
+    # db.refresh(user)
+    return tweetSaved
 
 # Elimina un tweet en el perfil del usuario
 def delete_tweet_user(db: Session, tweet: schemas.TweetSearch, user: schemas.User):
-    for tweets in user.tweets_saved:
+    # Borra el tweet guardado del fichero
+    route = "../tmp/" + str(user.id)
+    f = open(route, "rb")
+    tweetSaved = []
+    while 1:
+        try:
+            tweetSaved.append(pickle.load(f))
+        except EOFError:
+            break
+    for tweets in tweetSaved:
         if tweets.id == tweet.id:
-            user.tweets_saved.remove(tweets)
-    db.commit()
-    db.refresh(user)
-    return user.tweets_saved
+            tweetSaved.remove(tweets)
+    f.close()
+
+    f = open(route, "wb")
+    for tweets in tweetSaved:
+        pickle.dump(tweets, f)
+    f.close()
+    # db.commit()
+    # db.refresh(user)
+    return tweetSaved
+
+# Obtiene los tweets guardados del usuario
+def get_tweets_saved(db: Session, user_id: int):
+    route = "../tmp/" + str(user_id)
+    f = open(route, "rb")
+
+    tweetSaved = []
+    while 1:
+        try:
+            tweetSaved.append(pickle.load(f))
+        except EOFError:
+            break
+    f.close()
+    return tweetSaved
 
 # Guarda un tweet de una busqueda en la base de datos
 def create_search_tweet_search(db: Session, tweet_search: schemas.TweetSearchCreate, search_id: int):
-    #db_tweet_search = models.TweetSearch(**tweet_search.dict(), owner_id=search_id)
     db_tweet_search = models.TweetSearch(**tweet_search, owner_id=search_id)
     db.add(db_tweet_search)
     db.commit()
