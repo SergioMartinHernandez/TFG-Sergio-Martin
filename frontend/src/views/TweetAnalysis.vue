@@ -86,8 +86,8 @@ export default {
     ...mapActions(['saveTweet']),
     saveTweetUser(idTweet) {
       try {
-        console.log(idTweet)
         this.saveTweet(idTweet);
+        window.alert("Tweet saved successfully");
       } catch (error) {
         console.error(error);
       }

@@ -5,7 +5,8 @@ const state = {
   searchs: null,
   search: null,
   userSearch: null,
-  tweetSearch: null
+  tweetSearch: null,
+  tweetSaved: null
 };
 
 const getters = {
@@ -14,6 +15,7 @@ const getters = {
   stateSearchs: state => state.searchs,
   stateUserSearch: state => state.userSearch,
   stateTweetSearch: state => state.tweetSearch,
+  stateTweetSaved: state => state.tweetSaved,
 };
 
 const actions = {
@@ -61,6 +63,10 @@ const actions = {
     console.log(idTweet)
     await axios.delete(`/user/deletetweet/${idTweet}`);
   },
+  async viewTweetSaved({commit}) {
+    let {data} = await axios.get('user/tweetssaved/');
+    await commit('setTweetSaved', data);
+  },
 };
 
 const mutations = {
@@ -72,6 +78,9 @@ const mutations = {
   },
   setTweetSearch(state, tweetSearch) {
     state.tweetSearch = tweetSearch;
+  },
+  setTweetSaved(state, tweetSaved) {
+    state.tweetSaved = tweetSaved;
   },
   logout(state, user){
     state.user = user;

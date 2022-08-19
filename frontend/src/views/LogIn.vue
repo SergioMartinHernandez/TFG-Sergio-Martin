@@ -60,6 +60,7 @@ export default {
             await this.logIn(User);
             this.$router.push('/');
         } catch (error) {
+            window.alert("There was a problem logging in. Check email and password.");
             throw 'There was a problem logging in. Check email and password.';
         }  
     }

@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
               <div class="col">
-                  <div v-for="tweet in user.tweets_saved" :key="tweet.id" class="card bg-light">
+                  <div v-for="tweet in tweetSaved" :key="tweet.id" class="card bg-light">
                     <div class="card-body">
                       <h6><strong>Username: </strong>{{ tweet.author }}</h6>
                       <!-- TEXTO TWEET -->
@@ -63,24 +63,23 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'TweetSaved',
-    created: function() {
-      return this.$store.dispatch('viewMe');
-    },
-    computed: {
-      ...mapGetters({user: 'stateUser' }),
-    },
-    methods: {
-      ...mapActions(['deleteTweet']),
-      deleteTweetUser(idTweet) {
-        try {
-          console.log("Tweetsaved.vue")
-          console.log(idTweet)
-          this.deleteTweet(idTweet);
-        } catch (error) {
-          console.error(error);
-        }
-    },
+  created: function() {
+    this.$store.dispatch('viewTweetSaved');
   },
+  computed: {
+    ...mapGetters({tweetSaved: 'stateTweetSaved' }),
+  },
+  methods: {
+    ...mapActions(['deleteTweet']),
+    deleteTweetUser(idTweet) {
+      try {
+        this.deleteTweet(idTweet);
+        window.alert("Tweet deleted successfully");
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  }
 }
 </script>
 

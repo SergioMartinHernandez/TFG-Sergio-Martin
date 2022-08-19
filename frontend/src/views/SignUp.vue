@@ -76,6 +76,7 @@ export default {
         await this.signUp(this.user);
         this.$router.push('/');
       } catch (error) {
+        window.alert("Username already exists. Please try again.");
         throw 'Username already exists. Please try again.';
       }
     }
