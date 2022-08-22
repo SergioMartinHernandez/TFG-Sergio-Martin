@@ -222,7 +222,7 @@ async def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestF
     return response
 
 # Obtiene el usuario que esta utilizando la aplicacion
-@app.get("/users/me/", response_model=schemas.User)
+@app.get("/users/me", response_model=schemas.User)
 async def read_users_me(current_user: schemas.User = Depends(get_current_user)):
     return current_user
 
@@ -244,7 +244,7 @@ def update_user(
     return crud.update_user(db, user_id, updated_fields)
 
 # Recupera todos los usuarios de la base de datos
-@app.get("/users/", response_model=list[schemas.User])
+@app.get("/users", response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
@@ -258,7 +258,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 # Crea una busqueda para un usuario
-@app.post("/user/search/", response_model=schemas.Search)
+@app.post("/user/search", response_model=schemas.Search)
 def create_search_for_user(
     search: schemas.SearchCreate, 
     db: Session = Depends(get_db),
@@ -274,7 +274,7 @@ def create_search_for_user(
     return searchquery
 
 # Recupera todas las busquedas realizadas
-@app.get("/searchs/", response_model=list[schemas.Search])
+@app.get("/searchs", response_model=list[schemas.Search])
 def read_searchs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     searchs = crud.get_searchs(db, skip=skip, limit=limit)
     return searchs
@@ -303,21 +303,21 @@ def delete_tweet_user(tweet_id: int, db: Session = Depends(get_db), current_user
     return tweets_saved
 
 # Recupera los tweets guardados del usuario
-@app.get("/user/tweetssaved/", response_model=list[schemas.TweetSearch])
+@app.get("/user/tweetssaved", response_model=list[schemas.TweetSearch])
 def get_tweets_saved(db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
     tweetsaved = crud.get_tweets_saved(db, current_user.id)
     return tweetsaved
 
     
 # CREO QUE NO SE UTILIZA PARA NADA
-@app.post("/users/{search_id}/tweetsearch/", response_model=schemas.TweetSearch)
+@app.post("/users/{search_id}/tweetsearch", response_model=schemas.TweetSearch)
 def create_tweet_search_for_search(
     search_id: int, tweet_search: schemas.TweetSearchCreate, db: Session = Depends(get_db)
 ):
     return crud.create_search_tweet_search(db=db, tweet_search=tweet_search, search_id=search_id)
 
 # Recupera todos los tweets buscados
-@app.get("/tweetssearchs/", response_model=list[schemas.TweetSearch])
+@app.get("/tweetssearchs", response_model=list[schemas.TweetSearch])
 def read_tweet_searchs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     tweetsearchs = crud.get_tweet_searchs(db, skip=skip, limit=limit)
     return tweetsearchs
@@ -331,20 +331,20 @@ def get_tweet_by_id(tweetsearch_id: int,db: Session = Depends(get_db)):
     return db_tweet
 
 # CREO QUE NO SE UTILIZA PARA NADA
-@app.post("/users/{search_id}/usersearch/", response_model=schemas.UserSearch)
+@app.post("/users/{search_id}/usersearch", response_model=schemas.UserSearch)
 def create_user_search_for_search(
     search_id: int, user_search: schemas.UserSearchCreate, db: Session = Depends(get_db)
 ):
     return crud.create_user_search(db=db, user_search=user_search, search_id=search_id)
 
 # Recupera todos los usuarios buscados
-@app.get("/usersearchs/", response_model=list[schemas.UserSearch])
+@app.get("/usersearchs", response_model=list[schemas.UserSearch])
 def read_user_searchs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     usersearchs = crud.get_user_searchs(db, skip=skip, limit=limit)
     return usersearchs
 
 # Recupera el usuario buscado en una busqueda concreta
-@app.get("/search/user/", response_model=schemas.UserSearch)
+@app.get("/search/user", response_model=schemas.UserSearch)
 def get_user_of_search(db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
     search_id = current_user.searchs[-1].id
     user = crud.get_user_of_search(db, search_id=search_id)
