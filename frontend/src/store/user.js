@@ -31,11 +31,11 @@ const actions = {
     await dispatch('viewMe');
   },
   async viewMe({commit}) {
-    let {data} = await axios.get('/users/me/');
+    let {data} = await axios.get('/users/me');
     await commit('setUser', data);
   },
   async updateUser({}, updatedUser) {
-    await axios.patch('updateUser/', updatedUser);
+    await axios.patch('updateUser', updatedUser);
   },
   async deleteUser({}, id) {
     await axios.delete(`deleteUser/${id}`);
@@ -45,14 +45,14 @@ const actions = {
     commit('logout', user);
   },
   async createSearch({},search) {
-    await axios.post('user/search/', search);
+    await axios.post('user/search', search);
   },
   async viewUserSearch({commit}) {
-    let {data} = await axios.get('search/user/');
+    let {data} = await axios.get('search/user');
     await commit('setUserSearch', data);
   },
   async viewTweetSearch({commit}) {
-    let {data} = await axios.get('search/tweets/');
+    let {data} = await axios.get('search/tweets');
     await commit('setTweetSearch', data);
   },
   async saveTweet({}, idTweet) {
@@ -64,7 +64,7 @@ const actions = {
     await axios.delete(`/user/deletetweet/${idTweet}`);
   },
   async viewTweetSaved({commit}) {
-    let {data} = await axios.get('user/tweetssaved/');
+    let {data} = await axios.get('user/tweetssaved');
     await commit('setTweetSaved', data);
   },
 };
