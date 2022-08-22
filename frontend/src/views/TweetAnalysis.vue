@@ -4,15 +4,18 @@
         <div class="row">
             <div class="col">
               Grafica 1
-              <!-- <Bar v-if="loaded" :chart-data="chartData" /> -->
+              <!-- Grafica de lineas -->
+              <!-- <LineChart id="graphs" v-if="loaded" :chart-data="chartData" /> -->
             </div>
             <div class="col">
-            Grafica 2
+              Grafica 2
+              <!-- Grafica donuts -->
+              <DoughnutChart id="graphs" v-if="loaded" :chart-data="chartData" />
             </div>
         </div>
         <div class="row">
               <div class="col">
-                  <div v-for="tweet in tweetSearch" :key="tweet.id" class="card bg-light">
+                  <div id="cards" v-for="tweet in tweetSearch" :key="tweet.id" class="card bg-light">
                     <div class="card-body">
                       <h6><strong>Username: </strong>{{ tweet.author }}</h6>
                       <!-- TEXTO TWEET -->
@@ -68,11 +71,10 @@
 
 
 <script>
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+//import LineChart from '/src/components/LineChart.vue'
+import DoughnutChart from '/src/components/DoughnutChart.vue'
 import { mapGetters, mapActions } from 'vuex';
 
-//ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 export default {
   name: 'UserAnalysis',
   created: function() {
@@ -94,8 +96,68 @@ export default {
     },
   },
 
-  // name: 'BarChart',
-  // components: { Bar },
+  // Grafico donuts de palabras mas repetidas en los tweets
+  name: 'Doughnut',
+  components: { DoughnutChart },
+  data: () => ({
+    loaded: false,
+    chartData: null
+  }),
+  async mounted () {
+    this.loaded = false
+
+    try {
+      var tweetsText = new String()
+      var wordsSplit = new String()
+      var count
+      var wordsCounter = new Map()
+
+      for(var tweet in this.tweetSearch) {
+          tweetsText = tweetsText + this.tweetSearch[tweet].text.toLocaleLowerCase()
+      }
+
+      wordsSplit = tweetsText.split(" ");    
+      for(let i = 0; i < wordsSplit.length; i++) {    
+            count = 1;    
+            for(let j = i+1; j < wordsSplit.length; j++) {    
+                if(wordsSplit[i] == wordsSplit[j]) {    
+                    count++;      
+                    wordsSplit[j] = "0";    
+                }    
+            } 
+            if(count > 1 && wordsSplit[i] != "0")   
+                wordsCounter.set(wordsSplit[i],count)  
+      }   
+      var wordsRepeated = new Map([...wordsCounter.entries()].sort((a, b) => a[1] - b[1]));  
+      var counter = new Array()
+      wordsRepeated.forEach(function (value, key, mapObj) 
+      { 
+          if(wordsRepeated.size > 10) {
+            wordsRepeated.delete(key)
+          } else {
+            counter.push(value)
+          }
+      });
+
+      this.chartData = {
+        labels: wordsRepeated.keys(),
+        datasets: [
+          {
+            label: "Most Repeated Words",
+            backgroundColor: ['#41B883', '#7C8CF8', '#E46651', '#00D8FF', '#DD1B16', '#f87979', '#a8a032', '#8c8c84', '#bf117a', '#bf6011'],
+            data: counter
+          }
+        ]
+      };
+      this.loaded = true
+    } catch (e) {
+      console.error(e)
+    }
+  },
+
+  // Grafico de lineas con las interaciones de los ultimos tweets
+  // name: 'LineC',
+  // components: { LineChart },
   // data: () => ({
   //   loaded: false,
   //   chartData: null
@@ -104,14 +166,28 @@ export default {
   //   this.loaded = false
 
   //   try {
-  //     const { userlist } = await fetch('/api/userlist')
-  //     this.chartdata = userlist
+  //     const value = [];
+      
+  //     for(var tweet in this.tweetSearch) {
+  //         value[tweet] = this.tweetSearch[tweet].retweet_count + this.tweetSearch[tweet].reply_count + this.tweetSearch[tweet].like_count  + this.tweetSearch[tweet].quote_count;
+  //     }
+  //     //console.log(value)
 
+  //     this.chartData = {
+  //       labels: [1,2,3,4,5,6,7,8,9,10],
+  //       datasets: [
+  //         {
+  //           label: "Total interactions RTs + Likes + Replys + Quotes Last 10 tweets",
+  //           backgroundColor: "#f87979",
+  //           data: value
+  //         }
+  //       ]
+  //     };
   //     this.loaded = true
   //   } catch (e) {
   //     console.error(e)
   //   }
-  // }
+  // },
 }
 </script>
 
@@ -146,5 +222,11 @@ hr.solid {
 }
 #buttons-card {
   text-align: center;
+}
+#graphs {
+  margin: 20px;
+}
+#cards {
+  margin: 20px;
 }
 </style>

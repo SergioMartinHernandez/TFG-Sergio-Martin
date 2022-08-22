@@ -17,9 +17,6 @@
               </li>
               <ul class="navbar-nav mr-auto" id="options-navbar">
                 <li class="nav-item active">
-                  <a class="nav-link" href="/tweetsaved">Tweets Saved</a>
-                </li>
-                <li class="nav-item active">
                 <a class="nav-link" href="/useranalysis">User Analysis</a>
                 </li>
                 <li class="nav-item active">

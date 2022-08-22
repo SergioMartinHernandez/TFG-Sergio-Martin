@@ -49,17 +49,18 @@
         <div class="row">
             <div class="col">
               Grafica 1
-              <!-- <Bar v-if="loaded" :chart-data="chartData" /> -->
-              <!-- <Bar :chart-options="chartOptions" :chart-data="chartData"/> -->
+              <!-- Grafica de lineas -->
+              <LineChart id="graphs" v-if="loaded" :chart-data="chartData" />
             </div>
             <div class="col">
-              Grafica 2
-              <Pie :chart-options="chartOptions" :chart-data="chartData"/>
+              Grafica 2   
+              <!-- Grafica donuts -->    
+              <!-- <DoughnutChart id="graphs" v-if="loaded" :chart-data="chartData" /> -->
             </div>
         </div>
         <div class="row">
               <div class="col">
-                  <div v-for="tweet in tweetSearch" class="card bg-light">
+                  <div id="cards" v-for="tweet in tweetSearch" class="card bg-light">
                     <div class="card-body">
                       <h6><strong>Username: </strong>{{ tweet.author }}</h6>
                       <!-- TEXTO TWEET -->
@@ -115,11 +116,9 @@
 
 
 <script>
-import { Bar, Pie } from 'vue-chartjs/legacy'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement } from 'chart.js'
 import { mapGetters, mapActions } from 'vuex';
-
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement)
+import LineChart from '/src/components/LineChart.vue'
+// import DoughnutChart from '/src/components/DoughnutChart.vue'
 
 export default {
   name: 'UserAnalysis',
@@ -146,62 +145,93 @@ export default {
       }
     },
   },
-  // name: 'BarChart',
-  // components: { Bar },
-  // data: () => ({
-  //   loaded: false,
-  //   chartData: null
-  // }),
-  // async mounted () {
-  //   this.loaded = false
 
-  //   try {
-  //     const value = [];
-  //     for(var tweet in this.tweetSearch) {
-  //         value[tweet] = this.tweetSearch[tweet].created_at;
-  //     }
+ // Grafico de lineas con las interaciones de los ultimos tweets
+  name: 'LineC',
+  components: { LineChart },
+  data: () => ({
+    loaded: false,
+    chartData: null
+  }),
+  async mounted () {
+    this.loaded = false
 
-  //     console.log(value)
-  //     this.chartData = Object.assign({}, value);
-  //     console.log(this.chartData)
-  //     this.loaded = true
-  //   } catch (e) {
-  //     console.error(e)
-  //   }
-  // },
-
-  name: 'BarChart',
-  components: { Bar },
-  data() {
-    return {
-      chartData: {
-        labels: [ 'January', 'February', 'March' ],
-        datasets: [ { data: [40, 20, 12] } ]
-      },
-      chartOptions: {
-        responsive: true
+    try {
+      var value = new Array();
+      var numberTweets = new Array()
+      var counter = 1
+      
+      for(var tweet in this.tweetSearch) {
+          value[tweet] = this.tweetSearch[tweet].retweet_count + this.tweetSearch[tweet].reply_count + this.tweetSearch[tweet].like_count  + this.tweetSearch[tweet].quote_count;
+          numberTweets[counter-1] = counter
+          counter++
       }
-    }
-  },
-  name: 'PieChart',
-  components: { Pie },
-  data() {
-    return {
-      chartData: {
-        labels: ['VueJs', 'EmberJs', 'ReactJs', 'AngularJs'],
+
+      this.chartData = {
+        labels: numberTweets,
         datasets: [
           {
-            backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-            data: [40, 20, 80, 10]
+            label: "Total interactions RTs + Likes + Replys + Quotes Last 10 tweets",
+            backgroundColor: "#f87979",
+            data: value
           }
         ]
-      },
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false
-      }
+      };
+      this.loaded = true
+    } catch (e) {
+      console.error(e)
     }
-  }
+  },
+  
+// Grafico donuts de fechas en las que se han publicado los ultimos 10 tweets
+//   name: 'Doughnut',
+//   components: { DoughnutChart },
+//   data: () => ({
+//     loaded: false,
+//     chartData: null
+//   }),
+//   async mounted () {
+//     this.loaded = false
+
+//     try {
+//       var differentDates = new Set()
+//       var dates = new Array()
+//       for(var tweet in this.tweetSearch) {
+//           dates.push(this.tweetSearch[tweet].created_at)
+//           differentDates.add(this.tweetSearch[tweet].created_at)
+//       }
+
+//       dates.sort()
+//       var counter = new Array(differentDates.size);
+//       counter.fill(0)
+//       var j = 0
+//       var aux=dates[0];
+//       for (let i = 0; i < dates.length; i++) {
+//           if(aux == dates[i]){
+              
+//               counter[j]++;
+//           } else {
+//               j++;
+//               aux=dates[i];
+//               contador[j]++;
+//           }
+//       }
+//       this.chartData = {
+//         labels: differentDates,
+//         datasets: [
+//           {
+//             label: "Last 10 Tweets Date",
+//             backgroundColor: ['#41B883', '#7C8CF8', '#E46651', '#00D8FF', '#DD1B16', '#f87979', '#a8a032', '#8c8c84', '#bf117a', '#bf6011'],
+//             data: counter
+//           }
+//         ]
+//       };
+//       this.loaded = true
+//     } catch (e) {
+//       console.error(e)
+//     }
+//   }
+// }
 }
 </script>
 
@@ -236,5 +266,11 @@ hr.solid {
 }
 #buttons-card {
   text-align: center;
+}
+#graphs {
+  margin: 20px;
+}
+#cards {
+  margin: 20px;
 }
 </style>
