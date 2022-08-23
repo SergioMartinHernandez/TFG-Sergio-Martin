@@ -72,12 +72,6 @@ class OAuth2PasswordBearerCookie(OAuth2):
             cookie_authorization
         )
 
-        print("header_scheme")
-        print(header_scheme)
-
-        print("cookie_scheme")
-        print(cookie_scheme)
-
         if header_scheme.lower() == "bearer":
             authorization = True
             scheme = header_scheme
@@ -90,8 +84,6 @@ class OAuth2PasswordBearerCookie(OAuth2):
 
         else:
             authorization = False
-
-        print(authorization)
         
         if not authorization or scheme.lower() != "bearer":
             if self.auto_error:
