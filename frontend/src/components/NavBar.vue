@@ -5,7 +5,6 @@
           <img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
           TFG
         </a>
-        <!-- Para que salga el menu al hacer la pantalla mas pequeña -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarWeb" aria-controls="navbarWeb" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>

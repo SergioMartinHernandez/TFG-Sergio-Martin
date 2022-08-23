@@ -1,5 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.css';
-// Es un cliente HTTP
 import axios from 'axios';
 import Vue from 'vue';
 
