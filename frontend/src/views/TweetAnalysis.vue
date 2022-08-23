@@ -2,23 +2,35 @@
   <section>
     <div class="container">
         <div class="row">
-            <div class="col">
-              Grafica 1
-              <!-- Grafica de lineas -->
-              <!-- <LineChart id="graphs" v-if="loaded" :chart-data="chartData" /> -->
+          <div id="charts-col" class="col-md-7">
+            <div id="card-charts" class="card">
+              <div class="card-header">
+                Total interactions RTs + Likes + Replys + Quotes Last 10 tweets
+              </div>
+              <div class="card-body">
+                <!-- Grafica de lineas -->
+                <LineChart id="charts" v-if="loaded" :chart-data="chartData" />
+              </div>
             </div>
-            <div class="col">
-              Grafica 2
-              <!-- Grafica donuts -->
-              <DoughnutChart id="graphs" v-if="loaded" :chart-data="chartData" />
+          </div>
+          <div id="charts-col" class="col-md-5">
+             <div id="card-charts" class="card">
+              <div class="card-header">
+                Most Repeated Words
+              </div>
+              <div class="card-body">
+                <!-- Grafica donuts -->    
+                <DoughnutChart id="charts" v-if="loaded2" :chart-data="chartData2" />
+              </div>
             </div>
+          </div>
         </div>
         <div class="row">
               <div class="col">
                   <div id="cards" v-for="tweet in tweetSearch" :key="tweet.id" class="card bg-light">
                     <div class="card-body">
                       <h6><strong>Username: </strong>{{ tweet.author }}</h6>
-                      <!-- TEXTO TWEET -->
+                      <!-- Texto del tweet -->
                       <p>{{ tweet.text }}</p>
                       <div class="row">  
                         <div id="stats-tweet" class="col-2">                    
@@ -71,7 +83,7 @@
 
 
 <script>
-//import LineChart from '/src/components/LineChart.vue'
+import LineChart from '/src/components/LineChart.vue'
 import DoughnutChart from '/src/components/DoughnutChart.vue'
 import { mapGetters, mapActions } from 'vuex';
 
@@ -84,6 +96,7 @@ export default {
     ...mapGetters({tweetSearch: 'stateTweetSearch' }),
     
   },
+  // Metodo para guardar tweet en el perfil
   methods: {
     ...mapActions(['saveTweet']),
     saveTweetUser(idTweet) {
@@ -96,17 +109,44 @@ export default {
     },
   },
 
-  // Grafico donuts de palabras mas repetidas en los tweets
-  name: 'Doughnut',
-  components: { DoughnutChart },
+// Graficos
+// Grafico de lineas con las interaciones de los ultimos tweets
+// Grafico donuts de palabras mas repetidas en los tweets
+  name: 'Charts',
+  components: { LineChart, DoughnutChart },
   data: () => ({
+    // Datos grafica de lineas
     loaded: false,
-    chartData: null
+    chartData: null,
+    // Datos grafica donuts
+    loaded2: false,
+    chartData2: null
   }),
   async mounted () {
     this.loaded = false
+    this.loaded2 = false
 
     try {
+      // Se añaden los datos a la grafica de lineas
+      const value = [];
+      
+      for(var tweet in this.tweetSearch) {
+          value[tweet] = this.tweetSearch[tweet].retweet_count + this.tweetSearch[tweet].reply_count + this.tweetSearch[tweet].like_count  + this.tweetSearch[tweet].quote_count;
+      }
+
+      this.chartData = {
+        labels: [1,2,3,4,5,6,7,8,9,10],
+        datasets: [
+          {
+            label: "Total interactions",
+            backgroundColor: "#f87979",
+            data: value
+          }
+        ]
+      };
+      this.loaded = true
+
+      // Se añaden los datos a la grafica donuts
       var tweetsText = new String()
       var wordsSplit = new String()
       var count
@@ -139,7 +179,7 @@ export default {
           }
       });
 
-      this.chartData = {
+      this.chartData2 = {
         labels: wordsRepeated.keys(),
         datasets: [
           {
@@ -149,45 +189,11 @@ export default {
           }
         ]
       };
-      this.loaded = true
+      this.loaded2 = true
     } catch (e) {
       console.error(e)
     }
   },
-
-  // Grafico de lineas con las interaciones de los ultimos tweets
-  // name: 'LineC',
-  // components: { LineChart },
-  // data: () => ({
-  //   loaded: false,
-  //   chartData: null
-  // }),
-  // async mounted () {
-  //   this.loaded = false
-
-  //   try {
-  //     const value = [];
-      
-  //     for(var tweet in this.tweetSearch) {
-  //         value[tweet] = this.tweetSearch[tweet].retweet_count + this.tweetSearch[tweet].reply_count + this.tweetSearch[tweet].like_count  + this.tweetSearch[tweet].quote_count;
-  //     }
-  //     //console.log(value)
-
-  //     this.chartData = {
-  //       labels: [1,2,3,4,5,6,7,8,9,10],
-  //       datasets: [
-  //         {
-  //           label: "Total interactions RTs + Likes + Replys + Quotes Last 10 tweets",
-  //           backgroundColor: "#f87979",
-  //           data: value
-  //         }
-  //       ]
-  //     };
-  //     this.loaded = true
-  //   } catch (e) {
-  //     console.error(e)
-  //   }
-  // },
 }
 </script>
 
@@ -227,6 +233,9 @@ hr.solid {
   margin: 20px;
 }
 #cards {
+  margin: 20px;
+}
+#card-charts {
   margin: 20px;
 }
 </style>

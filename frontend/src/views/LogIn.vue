@@ -3,8 +3,8 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col">
-          <!-- IMAGEN -->
-          <img src="https://naldzgraphics.net/wp-content/uploads/2017/02/22-graphic-UI-illustration.jpg" class="img-fluid" alt="Responsive image">
+          <!-- Imagen pantalla -->
+          <img src="../assets/login.png" class="img-fluid" alt="Responsive image">
         </div>
         <div class="col-6">
           <form @submit.prevent="submit">
@@ -14,16 +14,18 @@
             <div class="row">
               <label id="label-login">Log in with your user and password</label>
             </div>
+            <!-- Formulario de inicio de sesion -->
             <div class="form-group row">
-              <!-- <label for="username" class="form-label">Username:</label> -->
+              <!-- Nombre de usuario -->
               <div class="col m-3"><input type="text" name="username" placeholder="Username" v-model="form.username" class="form-control" /></div>
             </div>
             <div class="form-group row">
-              <!-- <label for="password" class="form-label">Password:</label> -->
+              <!-- Contraseña -->
               <div class="col m-3"><input type="password" name="password" placeholder="Password" v-model="form.password" class="form-control" /></div>
             </div>
             <div class="row"> 
               <div class="col-6"></div>
+              <!-- Botones de confirmar inicio de sesio o cancelar -->
               <div id="button-submit" class="col"> <button type="submit" class="btn btn-primary">Log in</button> </div> 
               <div id="button-cancel" class="col"> <button type="button" class="btn btn-dark" @click="$router.push('/')">Cancel</button> </div>  
             </div> 
@@ -50,6 +52,7 @@ export default {
       }
     };
   },
+  // Metodo de inicio de sesion con comprobacion de contraseña
   methods: {
     ...mapActions(['logIn']),
     async submit() {

@@ -6,7 +6,7 @@
           TFG
         </a>
         <!-- Para que salga el menu al hacer la pantalla mas pequeña -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarWeb" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarWeb" aria-controls="navbarWeb" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarWeb">
@@ -39,10 +39,10 @@
           </ul>
           <ul v-else class="navbar-nav ml-auto flex-nowrap">
               <li class="nav-item active">
-                <a class="nav-link" href="/login">Log in</a>
+                <a class="nav-link" href="/login">Log In</a>
               </li>
               <li class="nav-item active">
-                <a class="nav-link" href="/signup">Sign up</a>
+                <a class="nav-link" href="/signup">Sign Up</a>
               </li>
           </ul>
         </div>

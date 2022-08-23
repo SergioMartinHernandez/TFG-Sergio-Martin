@@ -6,7 +6,7 @@
                   <div v-for="tweet in tweetSaved" :key="tweet.id" class="card bg-light">
                     <div class="card-body">
                       <h6><strong>Username: </strong>{{ tweet.author }}</h6>
-                      <!-- TEXTO TWEET -->
+                      <!-- Texto del tweet -->
                       <p>{{ tweet.text }}</p>
                       <div class="row">  
                         <div id="stats-tweet" class="col-2">                    
@@ -69,6 +69,7 @@ export default {
   computed: {
     ...mapGetters({tweetSaved: 'stateTweetSaved' }),
   },
+  // Metodo para eliminar tweet del perfil
   methods: {
     ...mapActions(['deleteTweet']),
     deleteTweetUser(idTweet) {

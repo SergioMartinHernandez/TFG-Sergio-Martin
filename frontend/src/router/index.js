@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'; 
 
 import Home from '@/views/Home.vue'
 import LogIn from '@/views/LogIn.vue';
@@ -27,7 +28,6 @@ const routes = [
     path: '/signup',
     name: 'SignUp',
     component: SignUp,
-    meta: {requiresAuth: true}
   },
   {
     path: '/account',
@@ -69,16 +69,16 @@ const router = new VueRouter({
 });
 
 // Para asegurarse que un usuario no logueado entre a secciones que no deberia entrar 
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     if (store.getters.isAuthenticated) {
-//       next();
-//       return;
-//     }
-//     next('/login');
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters.isAuthenticated) {
+      next();
+      return;
+    }
+    next('/login');
+  } else {
+    next();
+  }
+});
 
 export default router;

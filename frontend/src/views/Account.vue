@@ -3,39 +3,44 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col">
-            <img class="rounded-circle img-fluid" :src="user.image" alt="Responsive image">
-            <label class="form-label" for="newProfileImage">Change profile image</label>
-             <input type="text" name="profileImage" v-model="formUserUpdate.image" placeholder="URL new profile image" class="form-control" />
+          <!-- Foto de perfil del usuario y metodo para poder cambiarla -->
+          <img class="rounded-circle img-fluid" :src="user.image" alt="Responsive image">
+          <label class="form-label" for="newProfileImage">Change profile image</label>
+          <input type="text" name="profileImage" v-model="formUserUpdate.image" placeholder="URL new profile image" class="form-control" />
         </div>
         <div class="col-8">
           <form @submit.prevent="submit">
             <div class="row">
-              <label id="label-signup">Profile Settigns</label>
+              <label id="label-signup">Profile Settings</label>
             </div>
-            
+            <!-- Datos de la cuenta del usuario -->
             <div class="form-group row">
               <div class="col m-3">
+              <!-- Nombre del usuario -->
               <label for="first_name" class="form-label">First Name:</label>
               <input type="text" name="first_name" placeholder="First Name" :value="user.first_name" readonly class="form-control" />
               </div>
               <div class="col m-3">
+              <!-- Apellidos del usuario -->
               <label for="last_name" class="form-label">Last Name:</label>
               <input type="text" name="last_name" placeholder="Last Name" :value="user.last_name" readonly class="form-control" />
               </div>
             </div>
             <div class="form-group row">
-              
               <div class="col m-3">
+              <!-- Nombre de usuario -->
               <label for="username" class="form-label">Username:</label>
               <input type="text" name="username" placeholder="Username" :value="user.username" readonly class="form-control" />
               </div>
             </div>
             <div class="form-group row">
               <div class="col m-3">
+              <!-- Correo electronico -->
               <label for="email" class="form-label">Email:</label>
               <input type="email" name="email" placeholder="Email" :value="user.email" readonly class="form-control" />
               </div>
             </div>
+            <!-- Metodo para cambiar la contraseña del usuario -->
             <div class="row">
                 <label id="label-changepassword">Change password</label>
             </div>
@@ -56,6 +61,7 @@
               </div>
             </div>
             <div class="row"> 
+              <!-- Boton de borrar cuenta del usuario con modal para la confirmacion -->
               <div class="col-6">
                  <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAccountModal">Delete account</button> 
                  <div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -78,7 +84,9 @@
                   </div>
                 </div>
               </div>
+              <!-- Boton para confirmar los cambios en el perfil del usuario -->
               <div id="button-submit" class="col"> <button type="submit" class="btn btn-primary">Confirm changes</button> </div> 
+              <!-- Boton para cancelar los cambios y volver a la pagina principal -->
               <div id="button-cancel" class="col"> <button type="button" class="btn btn-dark" @click="$router.push('/')">Cancel</button> </div>  
             </div> 
           </form>   
@@ -109,6 +117,7 @@ export default {
   },
   methods: {
     ...mapActions(['deleteUser', 'updateUser']),
+    // Metodo para borrar cuenta del usuario
     async deleteAccount() {
       try {
         await this.deleteUser(this.user.id);
@@ -118,11 +127,10 @@ export default {
         console.error(error);
       }
     },
+    // Metodo para realizar los cambios en la cuenta del usuario
     async submit() {
         const newpassword = document.getElementById("newpassword").value;
         const newpassword2 = document.getElementById("newpassword2").value;
-        // console.log(newpassword)
-        // console.log(newpassword2)
         if(newpassword == newpassword2) {
              try {
               let updatedUser = {

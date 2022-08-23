@@ -2,11 +2,12 @@
   <section>
     <div class="container">
       <div v-if="isLoggedIn" id="logout">
-
-        <p id="titulo">Proyecto de TFG de Sergio Martín Hernández</p>
+        <p id="title">Proyecto de TFG de Sergio Martín Hernández</p>
+        <!-- Barra de busqueda de la pagina -->
         <div id="search-bar" class="input-group mb-3">
-          <select id="search-filter" v-model="search.type" class="selectpicker">
-            <option>Tweet</option>
+          <!-- Filtros de busqueda -->
+          <select id="search-filter" v-model="search.type" class="select">
+            <option selected>Tweet</option>
             <option>User</option>
           </select>
           <input id="search-input" type="text" v-model="search.title" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
@@ -16,21 +17,19 @@
             </svg>
           </button>
         </div> 
-
-
       </div> 
       <div v-else>
         <div class="row align-items-center">
           <div class="col-6">
-            <img src="https://w7.pngwing.com/pngs/574/920/png-transparent-icon-twitter-emblem-logo-famous.png" class="img-fluid">
+            <img id="image-home" src="../assets/home.png" class="img-fluid">
           </div>
           <div class="col">
             <div class="row">
-              <!-- <div class="col"><button type="button" class="btn btn-outline-dark btn-lg btn-block" @click="$router.push('/login')">Log in</button></div> -->
-              <button id="login-button" type="button" class="btn btn-outline-dark btn-lg btn-block" @click="$router.push('/login')">Log in</button>
+              <!-- Boton de inicio de sesion -->
+              <button id="login-button" type="button" class="btn btn-outline-primary btn-lg btn-block" @click="$router.push('/login')">Log in</button>
             </div>
             <div class="row">
-              <!-- <div class="col"><button type="button" class="btn btn-lg btn-dark btn-block" @click="$router.push('/signup')">Sign up</button></div> -->
+              <!-- Boton de registro de usuario -->
               <button id="signup-button" type="button" class="btn btn-lg btn-dark btn-block" @click="$router.push('/signup')">Sign up</button>
             </div>
           </div>
@@ -58,12 +57,11 @@ export default {
       return this.$store.getters.isAuthenticated;
     }
   },
+  // Metodo de creacion de una busqueda
   methods: {
     ...mapActions(['createSearch']),
     async SaveSearch() {
-      //const searchInput = document.getElementById("search-input");
-      //const inputValue = searchInput.value;
-      // const searchvalue = document.getElementById("search-filter").value;
+      // Creacion de busqueda de tweets
       if(this.search.type=="Tweet") {
         try {
           this.createSearch(this.search);
@@ -72,13 +70,16 @@ export default {
           throw 'Error in create search tweet. Please try again.';
         }
       }
-      else {
+      // Creacion de busqueda de usuarios
+      else if(this.search.type=="User"){
         try {
           this.createSearch(this.search);
           this.$router.push('/useranalysis');
         } catch (error) {
           throw 'Error in create search user. Please try again.';
         }
+      } else {
+        window.alert("Select filter by Tweet or User first, please");
       }
     }
   }
@@ -86,14 +87,12 @@ export default {
 </script>
 
 <style scoped>
-
 .container {
   background-color: aliceblue;
   margin-top: 7%;
   padding: 5em;
 }
-
-#titulo {
+#title {
   text-align: center;
   font-size: x-large;
   font-family: revert;
@@ -103,20 +102,21 @@ export default {
 #search-bar {
   font-family: Arial, Helvetica, sans-serif;
 }
-
 #search-button {
   font-size: large;
 }
-
 #search-filter {
   background: lavender;
 }
-
 #login-button {
   margin: 20px;
 }
-
 #signup-button {
   margin: 20px;
+}
+#image-home {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 </style>
