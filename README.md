@@ -16,4 +16,4 @@ Tener instalado [putty](https://www.putty.org/) en nuestro equipo.
 4. Hacer click en el botón *Open* de la parte inferior derecha.
 5. Una vez abierto el terminal ejecutar la orden *sudo docker-compose up -d --build*.
 
-**En ambos casos acceder a la dirección http://localhost:8080/ para encontrar la pantalla principal de la aplicación.**
+**En ambos casos acceder a la dirección http://localhost:8080 para encontrar la pantalla principal de la aplicación.**
