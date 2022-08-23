@@ -40,10 +40,6 @@ from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
-#AUTENTIFICACION
-
-# to get a string like this run:
-# openssl rand -hex 32
 SECRET_KEY = "0442fceb275663041ca1a2d8be1c0ac5b07c650f7c433bc73176125e09f15b5e"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
