@@ -301,7 +301,7 @@ def get_tweets_saved(db: Session = Depends(get_db), current_user: schemas.User =
     return tweetsaved
 
     
-# CREO QUE NO SE UTILIZA PARA NADA
+# Crea una nueva busqueda de tweets
 @app.post("/users/{search_id}/tweetsearch", response_model=schemas.TweetSearch)
 def create_tweet_search_for_search(
     search_id: int, tweet_search: schemas.TweetSearchCreate, db: Session = Depends(get_db)
@@ -322,7 +322,7 @@ def get_tweet_by_id(tweetsearch_id: int,db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Tweet not found")
     return db_tweet
 
-# CREO QUE NO SE UTILIZA PARA NADA
+# Crea una nueva busqueda de usuario
 @app.post("/users/{search_id}/usersearch", response_model=schemas.UserSearch)
 def create_user_search_for_search(
     search_id: int, user_search: schemas.UserSearchCreate, db: Session = Depends(get_db)
