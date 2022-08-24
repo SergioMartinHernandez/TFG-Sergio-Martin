@@ -2,10 +2,6 @@ from sqlalchemy.orm import Session
 import bcrypt
 from sqlalchemy import update
 from passlib.context import CryptContext
-import requests
-import json
-import pickle
-import os
 
 import models, schemas
 
@@ -38,11 +34,6 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-
-    # Crea el fichero con los tweets guardados
-    route = "../tmp/" + str(db_user.id)
-    f = open(route, "w")
-    f.close()
     return db_user
 
 # Actualiza los campos de un usuario en la base de datos
@@ -59,9 +50,6 @@ def update_user(db: Session, user_id: int, updated_fields: schemas.UserUpdate):
 
 # Borra un usuario de la base de datos
 def delete_user(db: Session, user: schemas.User):
-    # Borra el fichero con los tweets guardados
-    route = "../tmp/" + str(user.id)
-    os.remove(route)
     db.delete(user)
     db.commit()
 
@@ -90,65 +78,27 @@ def get_tweet_by_id(db: Session, tweetsearch_id: int):
     return db.query(models.TweetSearch).filter(models.TweetSearch.id == tweetsearch_id).first()
 
 # Guarda un tweet en el perfil del usuario
-def save_tweet_user(db: Session, tweet: schemas.TweetSearch, user: schemas.User):
-    # Añade el tweet guardado al fichero
-    route = "../tmp/" + str(user.id)
-    f = open(route, "rb")
-    tweetSaved = []
-    while 1:
-        try:
-            tweetSaved.append(pickle.load(f))
-        except EOFError:
-            break
-    for tweets in tweetSaved:
-        if tweets.id == tweet.id:
-            return tweetSaved
-    f.close()
+def save_tweet_user(db: Session, tweet: schemas.TweetSavedCreate, user_id: int):
+    db_tweet_saved = models.TweetSaved(url=tweet.url, text=tweet.text, author=tweet.author,
+    created_at=tweet.created_at, retweet_count=tweet.retweet_count, reply_count=tweet.reply_count, like_count=tweet.like_count, quote_count=tweet.quote_count,
+    lang=tweet.lang, source=tweet.source, owner_id=user_id)
+    db.add(db_tweet_saved)
+    db.commit()
+    db.refresh(db_tweet_saved)
+    return db_tweet_saved
 
-    f = open(route, "ab")
-    pickle.dump(tweet, f)
-    f.close()
-    # db.commit()
-    # db.refresh(user)
-    return tweetSaved
+# Obtiene un tweet guardado dado su id
+def get_tweet_saved_by_id(db: Session, tweetsaved_id: int, user_id:int):
+    return db.query(models.TweetSaved).filter(models.TweetSaved.id == tweetsaved_id).filter(models.TweetSaved.owner_id == user_id).first()
 
 # Elimina un tweet en el perfil del usuario
-def delete_tweet_user(db: Session, tweet: schemas.TweetSearch, user: schemas.User):
-    # Borra el tweet guardado del fichero
-    route = "../tmp/" + str(user.id)
-    f = open(route, "rb")
-    tweetSaved = []
-    while 1:
-        try:
-            tweetSaved.append(pickle.load(f))
-        except EOFError:
-            break
-    for tweets in tweetSaved:
-        if tweets.id == tweet.id:
-            tweetSaved.remove(tweets)
-    f.close()
-
-    f = open(route, "wb")
-    for tweets in tweetSaved:
-        pickle.dump(tweets, f)
-    f.close()
-    # db.commit()
-    # db.refresh(user)
-    return tweetSaved
+def delete_tweet_user(db: Session, tweet: schemas.TweetSearch):
+    db.delete(tweet)
+    db.commit()
 
 # Obtiene los tweets guardados del usuario
 def get_tweets_saved(db: Session, user_id: int):
-    route = "../tmp/" + str(user_id)
-    f = open(route, "rb")
-
-    tweetSaved = []
-    while 1:
-        try:
-            tweetSaved.append(pickle.load(f))
-        except EOFError:
-            break
-    f.close()
-    return tweetSaved
+    return db.query(models.TweetSaved).filter(models.TweetSaved.owner_id == user_id).all()
 
 # Guarda un tweet de una busqueda en la base de datos
 def create_search_tweet_search(db: Session, tweet_search: schemas.TweetSearchCreate, search_id: int):

@@ -37,10 +37,8 @@ class TweetSearch(Base):
     lang = Column(String, index=True)
     source = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("search.id"))
-    # owner_user_id = Column(Integer, ForeignKey("users.id"))
 
     ownertweetsearch = relationship("Search", back_populates="tweetsearchs")
-    # tweetowner = relationship("User", back_populates="tweet_saves")
 
     def __gettweetsearch__(self, i):
         return f"Value {i}"
@@ -78,10 +76,31 @@ class User(Base):
     hashed_password = Column(String)
     created_at = Column(String, default=str(date.today())) 
     image = Column(String, default="https://toppng.com/uploads/preview/instagram-default-profile-picture-11562973083brycehrmyv.png")
-    # tweets_saved = list()
 
     searchs = relationship("Search", back_populates="ownersearch")
-    # tweet_saves = relationship("TweetSearch", back_populates="tweetowner")
+    tweetsaved = relationship("TweetSaved", back_populates="ownertweetsaved")
 
     def __getuser__(self, i):
+        return f"Value {i}"
+
+
+class TweetSaved(Base):
+    __tablename__ = "tweetsaved"
+
+    id = Column(Integer, primary_key=True, index=True)
+    url= Column(String, index=True)
+    text = Column(String, index=True)
+    author = Column(String, index=True)
+    created_at = Column(Date, index=True)
+    retweet_count = Column(Integer, index=True)
+    reply_count = Column(Integer, index=True)
+    like_count = Column(Integer, index=True)
+    quote_count = Column(Integer, index=True)
+    lang = Column(String, index=True)
+    source = Column(String, index=True)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+
+    ownertweetsaved = relationship("User", back_populates="tweetsaved")
+
+    def __gettweetsaved__(self, i):
         return f"Value {i}"

@@ -72,6 +72,32 @@ class UserSearch(UserSearchBase):
         orm_mode = True
 
 
+# Modelo Pydantic de Tweet guardado 
+class TweetSavedBase(BaseModel):
+    url: str
+    text: str
+    author: str
+    created_at: date
+    retweet_count: int
+    reply_count: int
+    like_count: int
+    quote_count: int
+    lang: str
+    source: str
+
+# Modelo Pydantic de creacion Tweet guardado
+class TweetSavedCreate(TweetSavedBase):
+    pass
+
+# Recuperacion del objeto del API ya añadiendo los campos que no se sabian en la creacion
+class TweetSaved(TweetSavedBase):
+    id: int
+    owner_id: int
+
+    class Config:
+        orm_mode = True
+
+
 # Modelo Pydantic de busqueda 
 class SearchBase(BaseModel):
     title: str
@@ -107,7 +133,7 @@ class User(UserBase):
     created_at: str
     image: str
     searchs: list[Search] = []
-    # tweets_saved: list[TweetSearch]
+    tweetsaved: list[TweetSearch] = []
 
     class Config:
         orm_mode = True

@@ -275,24 +275,25 @@ def get_tweets_of_search(skip: int = 0, limit: int = 100, db: Session = Depends(
     return tweets
 
 # Guarda el tweet en el perfil del usuario
-@app.post("/user/savetweet/{tweet_id}", response_model=list[schemas.TweetSearch])
+@app.post("/user/savetweet/{tweet_id}", response_model=schemas.TweetSaved)
 def save_tweet_user(tweet_id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
     tweet = crud.get_tweet_by_id(db, tweetsearch_id=tweet_id)
-    user = crud.get_user(db, current_user.id)
-    tweets_saved = crud.save_tweet_user(db, user=user, tweet=tweet)
+    #user = crud.get_user(db, current_user.id)
+    tweets_saved = crud.save_tweet_user(db, user_id=current_user.id, tweet=tweet)
     return tweets_saved
 
 # Elimina el tweet del perfil del usuario
-@app.delete("/user/deletetweet/{tweet_id}", response_model=list[schemas.TweetSearch])
+@app.delete("/user/deletetweet/{tweet_id}", status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
 def delete_tweet_user(tweet_id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
-    tweet = crud.get_tweet_by_id(db, tweetsearch_id=tweet_id)
-    user = crud.get_user(db, current_user.id)
-    tweets_saved = crud.delete_tweet_user(db, user=user, tweet=tweet)
+    tweet = crud.get_tweet_saved_by_id(db, tweetsaved_id=tweet_id, user_id=current_user.id)
+    #user = crud.get_user(db, current_user.id)
+    tweets_saved = crud.delete_tweet_user(db, tweet=tweet)
     return tweets_saved
 
 # Recupera los tweets guardados del usuario
-@app.get("/user/tweetssaved", response_model=list[schemas.TweetSearch])
+@app.get("/user/tweetssaved", response_model=list[schemas.TweetSaved])
 def get_tweets_saved(db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+    print("entro aqui")
     tweetsaved = crud.get_tweets_saved(db, current_user.id)
     return tweetsaved
 
