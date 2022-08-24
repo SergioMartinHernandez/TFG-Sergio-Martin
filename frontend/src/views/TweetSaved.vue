@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
               <div class="col">
-                  <div v-for="tweet in tweetSaved" :key="tweet.id" class="card bg-light">
+                  <div id="cards" v-for="tweet in tweetSaved" :key="tweet.id" class="card bg-light">
                     <div class="card-body">
                       <h6><strong>Username: </strong>{{ tweet.author }}</h6>
                       <!-- Texto del tweet -->
@@ -115,5 +115,8 @@ hr.solid {
 }
 #buttons-card {
   text-align: center;
+}
+#cards {
+  margin: 20px;
 }
 </style>

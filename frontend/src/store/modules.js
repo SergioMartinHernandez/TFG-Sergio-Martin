@@ -65,6 +65,7 @@ const actions = {
   },
   async viewTweetSaved({commit}) {
     let {data} = await axios.get('user/tweetssaved');
+    console.log("hola")
     await commit('setTweetSaved', data);
   },
 };

@@ -28,7 +28,7 @@
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/account">Account</a>
                     <a class="dropdown-item" href="/searchhistory">Search History</a>
-                    <a class="dropdown-item" href="/myTweets">Tweets Saved</a>
+                    <a class="dropdown-item" href="/tweetsaved">Tweets Saved</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" @click="logout">Log Out</a>
                   </div>
