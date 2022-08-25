@@ -9,3 +9,4 @@ alembic
 fastapi-sqlalchemy
 tweepy
 python-multipart
+pydantic[email]
