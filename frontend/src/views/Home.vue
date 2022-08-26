@@ -1,7 +1,8 @@
 <template>
   <section>
-    <div class="container">
+   
       <div v-if="isLoggedIn" id="logout">
+       <div id="search-container" class="container">
         <p id="title">Proyecto de TFG de Sergio Martín Hernández</p>
         <!-- Barra de busqueda de la pagina -->
         <div id="search-bar" class="input-group mb-3">
@@ -18,23 +19,48 @@
           </button>
         </div> 
       </div> 
+           </div>
       <div v-else>
-        <div class="row align-items-center">
+        <!-- <div class="row align-items-center">
           <div class="col-6">
             <img id="image-home" src="../assets/home.png" class="img-fluid">
           </div>
           <div class="col">
             <div class="row">
-              <!-- Boton de inicio de sesion -->
+               Boton de inicio de sesion 
               <button id="login-button" type="button" class="btn btn-outline-primary btn-lg btn-block" @click="$router.push('/login')">Log in</button>
             </div>
             <div class="row">
-              <!-- Boton de registro de usuario -->
+              Boton de registro de usuario
               <button id="signup-button" type="button" class="btn btn-lg btn-dark btn-block" @click="$router.push('/signup')">Sign up</button>
             </div>
           </div>
-        </div>
-      </div>
+        </div> -->
+        <section class="home_banner_area">
+          <div class="banner_inner">
+            <div class="container">
+              <div class="row">
+                <div class="col-lg-7">
+                  <div class="banner_content">
+                    <!-- <h1 class="text-uppercase">datter</h1> -->
+                    <img class="" src="../assets/logoWhite.png" alt="">
+                    <h5 class="text">Tool For Twitter Data Analysis</h5>
+                    <div class="d-flex align-items-center">
+                      <button id="login-button" type="button" class="btn btn-secondary btn-lg btn-block" @click="$router.push('/login')">Log In</button>
+                      <button id="signup-button" type="button" class="btn btn-lg btn-dark btn-block" @click="$router.push('/signup')">Sign Up</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-5">
+                  <div class="home_right_img">
+                    <img id="image-home" class="" src="../assets/home-image.png" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+ 
     </div>
   </section>
 </template>
@@ -87,7 +113,7 @@ export default {
 </script>
 
 <style scoped>
-.container {
+#search-container {
   background-color: aliceblue;
   margin-top: 7%;
   padding: 5em;
@@ -109,14 +135,77 @@ export default {
   background: lavender;
 }
 #login-button {
-  margin: 20px;
+  margin-top: 20px; 
+  margin-right: 20px;
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40;
 }
 #signup-button {
-  margin: 20px;
+  margin-top: 20px; 
+  color: #fff;
+  background-color: gray;
+  border-color: gray;
 }
 #image-home {
   display: block;
   max-width: 100%;
   height: auto;
-}
+  margin-left: 20px;
+} 
+.home_banner_area {
+    z-index: 1;
+    background: url(../assets/home-banner.png) no-repeat top center;
+    background-position: center;
+    background-size: cover; }
+    .home_banner_area .banner_inner {
+      width: 100%; }
+      .home_banner_area .banner_inner .home_right_img {
+        padding-top: 197px; }
+        @media (max-width: 1480px) {
+          .home_banner_area .banner_inner .home_right_img img {
+            max-width: 100%;
+            height: auto; } }
+        @media (max-width: 991px) {
+          .home_banner_area .banner_inner .home_right_img {
+            display: none; } }
+      .home_banner_area .banner_inner .col-lg-7 {
+        vertical-align: middle;
+        align-self: center; }
+      .home_banner_area .banner_inner .banner_content {
+        text-align: left; }
+        @media (max-width: 991px) {
+          .home_banner_area .banner_inner .banner_content {
+            margin-top: 150px; } }
+        .home_banner_area .banner_inner .banner_content h3 {
+          font-size: 40px;
+          margin-bottom: 20px;
+          position: relative; }
+          .home_banner_area .banner_inner .banner_content h3:after {
+            content: '';
+            width: 410px;
+            height: 2px;
+            position: absolute;
+            top: 50%;
+            left: 23%;
+            background: #000000; }
+            @media (max-width: 575px) {
+              .home_banner_area .banner_inner .banner_content h3:after {
+                display: none; } }
+        .home_banner_area .banner_inner .banner_content h1 {
+          margin-top: 20px;
+          font-size: 70px;
+          line-height: 60px;
+          margin-bottom: 25px; }
+          @media (max-width: 1024px) {
+            .home_banner_area .banner_inner .banner_content h1 {
+              font-size: 60px; } }
+          @media (max-width: 767px) {
+            .home_banner_area .banner_inner .banner_content h1 {
+              font-size: 50px; } }
+        .home_banner_area .banner_inner .banner_content h5 {
+          font-size: 24px;
+          margin-bottom: 35px; }
+        .home_banner_area .banner_inner .banner_content .primary_btn {
+          margin-right: 20px; }
 </style>

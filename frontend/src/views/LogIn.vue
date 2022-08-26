@@ -82,8 +82,7 @@
 				<div class="col-md-12 col-lg-10">
 					<div class="wrap d-md-flex">
             <!-- Imagen pantalla  -->
-						<div class="img" src="../assets/login.png" style="background-image">
-             <img src="../assets/login.png"></div>
+						<div class="img" id="image-login"  style="background-image"></div>
 						<div class="login-wrap p-4 p-md-5">
 			      	<div class="d-flex">
 			      		<div class="w-100">
@@ -176,5 +175,8 @@ export default {
 #a-account {
   margin-top: 17px;
 } */
+#image-login {
+  background: url(../assets/login.png)
+}
   @import '../assets/styles/style.css';
 </style>
