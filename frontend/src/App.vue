@@ -25,6 +25,6 @@ export default {
 }
 
 body, main {
-    height: 100vh;
+  height: 100vh;
 }
 </style>

@@ -2,8 +2,7 @@
   <header>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <a class="navbar-brand" href="/">
-          <img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-          TFG
+          <img src="../assets/logo2.png" width="100" height="30" class="d-inline-block align-top" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarWeb" aria-controls="navbarWeb" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>

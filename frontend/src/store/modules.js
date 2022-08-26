@@ -20,7 +20,7 @@ const getters = {
 
 const actions = {
   async signUp({dispatch}, form) {
-    await axios.post('signup', form);
+    let {data} = await axios.post('signup', form);
     let UserForm = new FormData();
     UserForm.append('username', form.username);
     UserForm.append('password', form.password);
@@ -65,7 +65,6 @@ const actions = {
   },
   async viewTweetSaved({commit}) {
     let {data} = await axios.get('user/tweetssaved');
-    console.log("hola")
     await commit('setTweetSaved', data);
   },
 };

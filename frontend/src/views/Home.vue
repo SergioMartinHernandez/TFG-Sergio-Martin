@@ -64,7 +64,7 @@ export default {
       // Creacion de busqueda de tweets
       if(this.search.type=="Tweet") {
         try {
-          this.createSearch(this.search);
+          await this.createSearch(this.search);
           this.$router.push('/tweetanalysis');
         } catch (error) {
           throw 'Error in create search tweet. Please try again.';
@@ -73,7 +73,7 @@ export default {
       // Creacion de busqueda de usuarios
       else if(this.search.type=="User"){
         try {
-          this.createSearch(this.search);
+          await this.createSearch(this.search);
           this.$router.push('/useranalysis');
         } catch (error) {
           throw 'Error in create search user. Please try again.';
