@@ -33,7 +33,7 @@ from starlette.responses import RedirectResponse, Response, JSONResponse
 from starlette.requests import Request
 from routers import searchs, users, tweets
 
-import crud, models, schemas
+import models, schemas
 from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
