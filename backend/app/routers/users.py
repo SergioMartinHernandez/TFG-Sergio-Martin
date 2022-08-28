@@ -6,7 +6,7 @@ from starlette.responses import Response, JSONResponse
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from dependencies import get_db, get_current_user, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
-from dao import usersDAO
+import daoImpl.usersDAOImpl as us
 
 
 router = APIRouter()
@@ -22,10 +22,10 @@ router = APIRouter()
 #DAO
 @router.post("/signup", response_model=schemas.User)
 def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = usersDAO.get_user_by_username(db=db, username=user.username)
+    db_user = us.usersDAOImpl.get_user_by_username(db=db, username=user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
-    return usersDAO.create_user(db=db, user=user)
+    return us.usersDAOImpl.create_user(db=db, user=user)
 
 # Inicia sesion en un usuario registrado
 @router.post("/login", response_model=schemas.Token)
@@ -73,8 +73,8 @@ async def read_users_me(current_user: schemas.User = Depends(get_current_user)):
 #DAO
 @router.delete("/deleteUser/{user_id}", status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
-    user = usersDAO.get_user(db=db, user_id=user_id)
-    usersDAO.delete_user(db=db,user=user)
+    user = us.usersDAOImpl.get_user(db=db, user_id=user_id)
+    us.usersDAOImpl.delete_user(db=db,user=user)
     return None
 
 # Actualiza los campos cambiados de un usuarios que se encuentra en la base de datos
@@ -95,7 +95,7 @@ def update_user(
     current_user: schemas.User = Depends(get_current_user)
 ):
     user_id = current_user.id
-    return usersDAO.update_user(db=db, user_id = current_user.id, updated_fields=updated_fields)
+    return us.usersDAOImpl.update_user(db=db, user_id = current_user.id, updated_fields=updated_fields)
 
 # Recupera todos los usuarios de la base de datos
 # @router.get("/users", response_model=list[schemas.User])
@@ -106,7 +106,7 @@ def update_user(
 #DAO
 @router.get("/users", response_model=list[schemas.User])
 def read_users(db: Session = Depends(get_db)):
-    users = usersDAO.get_users(db=db)
+    users = us.usersDAOImpl.get_users(db=db)
     return users
 
 # Recupera un usuario concreto de la base de datos
@@ -120,7 +120,7 @@ def read_users(db: Session = Depends(get_db)):
 #DAO
 @router.get("/users/{user_id}", response_model=schemas.User)
 def read_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = usersDAO.get_user(db=db, user_id=user_id)
+    db_user = us.usersDAOImpl.get_user(db=db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user

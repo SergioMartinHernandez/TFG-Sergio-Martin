@@ -19,7 +19,7 @@ from starlette.status import HTTP_403_FORBIDDEN
 from starlette.requests import Request
 
 import schemas
-from dao import usersDAO
+import daoImpl.usersDAOImpl as us
 
 SECRET_KEY = "0442fceb275663041ca1a2d8be1c0ac5b07c650f7c433bc73176125e09f15b5e"
 ALGORITHM = "HS256"
@@ -87,13 +87,12 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 def authenticate_user(db, username: str, password: str):
-    user = usersDAO.get_user_dict(db=db, username=username)
+    user = us.usersDAOImpl.get_user_dict(db=db, username=username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
         return False
     return user
-
 
 # Función de utilidad para generar un nuevo token de acceso
 # def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -122,7 +121,7 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         token_data = schemas.TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = usersDAO.get_user_by_username(db=db, username=token_data.username)
+    user = us.usersDAOImpl.get_user_by_username(db=db, username=token_data.username)
     if user is None:
         raise credentials_exception
     return user

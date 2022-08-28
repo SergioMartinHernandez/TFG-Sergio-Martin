@@ -3,7 +3,7 @@ import schemas
 from fastapi import Depends, APIRouter, HTTPException
 
 from dependencies import get_db, get_current_user
-from dao import searchsDAO
+import daoImpl.searchsDAOImpl as se
 
 
 router = APIRouter()
@@ -97,13 +97,13 @@ def create_search_for_user(
     current_user: schemas.User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    searchquery = searchsDAO.create_user_search(search=search, user_id=current_user.id, db=db)
+    searchquery = se.searchsDAOImpl.create_user_search(search=search, user_id=current_user.id, db=db)
     if search.type == "tweet":
         # hacer busqueda de TweetSearch
-        searchsDAO.search_tweets(query=searchquery.title, search_id=searchquery.id, db=db)
+        se.searchsDAOImpl.search_tweets(query=searchquery.title, search_id=searchquery.id, db=db)
     else:
         # hacer busqueda de usertweet
-        searchsDAO.search_user(username=searchquery.title, search_id=searchquery.id, db=db)
+        se.searchsDAOImpl.search_user(username=searchquery.title, search_id=searchquery.id, db=db)
     return searchquery
 
 
@@ -116,7 +116,7 @@ def create_search_for_user(
 # DAO
 @router.get("/searchs", response_model=list[schemas.Search])
 def read_searchs(db: Session = Depends(get_db)):
-    searchs = searchsDAO.get_searchs(db=db)
+    searchs = se.searchsDAOImpl.get_searchs(db=db)
     return searchs
 
 # Recupera los tweets buscados en una busqueda concreta
@@ -130,7 +130,7 @@ def read_searchs(db: Session = Depends(get_db)):
 @router.get("/search/tweets", response_model=list[schemas.TweetSearch])
 def get_tweets_of_search(db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
     search_id = current_user.searchs[-1].id
-    tweets = searchsDAO.get_tweets_of_search(db=db,search_id=search_id)
+    tweets = se.searchsDAOImpl.get_tweets_of_search(db=db,search_id=search_id)
     return tweets
 
 # Crea una nueva busqueda de tweets
@@ -145,7 +145,7 @@ def get_tweets_of_search(db: Session = Depends(get_db), current_user: schemas.Us
 def create_tweet_search_for_search(
     search_id: int, tweet_search: schemas.TweetSearchCreate, db: Session = Depends(get_db)
 ):
-    return searchsDAO.create_search_tweet_search(tweet_search=tweet_search, search_id=search_id, db=db)
+    return se.searchsDAOImpl.create_search_tweet_search(tweet_search=tweet_search, search_id=search_id, db=db)
 
 # Recupera todos los tweets buscados
 # @router.get("/tweetssearchs", response_model=list[schemas.TweetSearch])
@@ -156,7 +156,7 @@ def create_tweet_search_for_search(
 #DAO
 @router.get("/tweetssearchs", response_model=list[schemas.TweetSearch])
 def read_tweet_searchs(db: Session = Depends(get_db)):
-    tweetsearchs = searchsDAO.get_tweet_searchs(db=db)
+    tweetsearchs = se.searchsDAOImpl.get_tweet_searchs(db=db)
     return tweetsearchs
 
 
@@ -171,7 +171,7 @@ def read_tweet_searchs(db: Session = Depends(get_db)):
 #DAO
 @router.get("/tweetsearch/{tweetsearch_id}", response_model=schemas.TweetSearch)
 def get_tweet_by_id(tweetsearch_id: int, db: Session = Depends(get_db),):
-    db_tweet = searchsDAO.get_tweet_by_id(tweetsearch_id=tweetsearch_id, db=db)
+    db_tweet = se.searchsDAOImpl.get_tweet_by_id(tweetsearch_id=tweetsearch_id, db=db)
     if db_tweet is None:
         raise HTTPException(status_code=404, detail="Tweet not found")
     return db_tweet
@@ -188,7 +188,7 @@ def get_tweet_by_id(tweetsearch_id: int, db: Session = Depends(get_db),):
 def create_user_search_for_search(
     search_id: int, user_search: schemas.UserSearchCreate, db: Session = Depends(get_db),
 ):
-    return searchsDAO.create_user_search(user_search=user_search, search_id=search_id, db=db)
+    return se.searchsDAOImpl.create_user_search(user_search=user_search, search_id=search_id, db=db)
 
 
 # Recupera todos los usuarios buscados
@@ -200,7 +200,7 @@ def create_user_search_for_search(
 # DAO
 @router.get("/usersearchs", response_model=list[schemas.UserSearch])
 def read_user_searchs(db: Session = Depends(get_db)):
-    usersearchs = searchsDAO.get_user_searchs(db=db)
+    usersearchs = se.searchsDAOImpl.get_user_searchs(db=db)
     return usersearchs
 
 # Recupera el usuario buscado en una busqueda concreta
@@ -214,5 +214,5 @@ def read_user_searchs(db: Session = Depends(get_db)):
 @router.get("/search/user", response_model=schemas.UserSearch)
 def get_user_of_search(db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
     search_id = current_user.searchs[-1].id
-    user = searchsDAO.get_user_of_search(db=db, search_id=search_id)
+    user = se.searchsDAOImpl.get_user_of_search(db=db, search_id=search_id)
     return user

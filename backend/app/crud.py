@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 
 import models, schemas
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Obtiene un usuario dado su id
 # def get_user(db: Session, user_id: int):
