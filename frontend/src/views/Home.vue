@@ -1,6 +1,5 @@
 <template>
   <section>
-   
       <div v-if="isLoggedIn" id="logout">
        <div id="search-container" class="container">
         <p id="title">Proyecto de TFG de Sergio Martín Hernández</p>
@@ -42,9 +41,8 @@
               <div class="row">
                 <div class="col-lg-7">
                   <div class="banner_content">
-                    <!-- <h1 class="text-uppercase">datter</h1> -->
                     <img class="" src="../assets/logoWhite.png" alt="">
-                    <h5 class="text">Tool For Twitter Data Analysis</h5>
+                    <h4 class="text">Tool For Twitter Data Analysis</h4>
                     <div class="d-flex align-items-center">
                       <button id="login-button" type="button" class="btn btn-secondary btn-lg btn-block" @click="$router.push('/login')">Log In</button>
                       <button id="signup-button" type="button" class="btn btn-lg btn-dark btn-block" @click="$router.push('/signup')">Sign Up</button>
@@ -60,7 +58,6 @@
             </div>
           </div>
         </section>
- 
     </div>
   </section>
 </template>

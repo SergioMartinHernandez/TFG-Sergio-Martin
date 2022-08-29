@@ -6,19 +6,8 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 
-// const dotenv = require('dotenv');
-// dotenv.config();
-
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://localhost:8000/';
-console.log(process.env.STATUS)
-// process.env.STATUS == 'production'
-//   ?(axios.defaults.baseURL=process.env.PROD_BASE_URL) 
-//   :(axios.defaults.baseURL=process.env.DEV_BASE_URL);
-
-console.log(axios.defaults.baseURL)
-// Descomentar cuando se ejecute en VPS
-//axios.defaults.baseURL = 'http://141.145.196.17:8000/';
+axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL;
 
 // Cierra sesion al usuario cuando pasen 30 minutos del token de autentificacion
 axios.interceptors.response.use(undefined, function (error) {
