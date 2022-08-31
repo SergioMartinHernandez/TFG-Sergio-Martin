@@ -41,6 +41,7 @@ class searchsDAOImpl(SearchsDAO):
 
     def search_user(username:str, search_id: int, db: Session):
         username=username.replace(" ", "")
+        username=username.replace("@", "")
         client = tweepy.Client(bearer_token=BEARER_TOKEN)
         user = client.get_user(username=username,user_fields=['created_at','description','location','name','profile_image_url','public_metrics','username','verified'])
         user_search = {}

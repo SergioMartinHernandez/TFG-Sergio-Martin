@@ -1,5 +1,6 @@
 from array import array
 from datetime import date
+import datetime
 from email.policy import default
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import relationship
@@ -13,6 +14,7 @@ class Search(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     type = Column(String, index=True)
+    created_at = Column(String, default=str(datetime.datetime.now().ctime()))
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     ownersearch = relationship("User", back_populates="searchs")

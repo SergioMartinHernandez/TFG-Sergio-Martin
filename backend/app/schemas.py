@@ -99,6 +99,7 @@ class SearchCreate(SearchBase):
 # Recuperacion del objeto del API ya añadiendo los campos que no se sabian en la creacion
 class Search(SearchBase):
     id: int
+    created_at: str
     owner_id: int
 
     class Config:
