@@ -31,12 +31,9 @@ export default {
   name: 'SearchHistory',
   created: function() {
     this.$store.dispatch('viewMe');
-    this.$store.dispatch('viewTweetSearch');
-
   },
   computed: {
     ...mapGetters({user: 'stateUser' }),
-    ...mapGetters({tweetSearch: 'stateTweetSearch' }),
   },
 }
 </script>

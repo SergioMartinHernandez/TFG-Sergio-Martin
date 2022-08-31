@@ -153,16 +153,11 @@ import DoughnutChart from '/src/components/DoughnutChart.vue'
 
 export default {
   name: 'UserAnalysis',
-  data() {
-    return {
-      userSearch: undefined,
-      tweetSearch: undefined,
-    };
-  },
-  created: function() {
-    this.$store.dispatch('viewUserSearch');
-    this.$store.dispatch('viewTweetSearch');
-  },
+  components: { DoughnutChart, LineChart},
+  // created: function() {
+  //   this.$store.dispatch('viewUserSearch');
+  //   this.$store.dispatch('viewTweetSearch');
+  // },
   computed: {
     ...mapGetters({userSearch: 'stateUserSearch' }),
     ...mapGetters({tweetSearch: 'stateTweetSearch' }),
@@ -204,10 +199,6 @@ export default {
       var differentDates = new Set()
       var dates = new Array()
       for(var tweet in this.tweetSearch) {
-          if(this.tweetSearch[tweet].owner_id == this.userSearch.owner_id) {
-            console.log(this.userSearch.name)
-          }
-          console.log(this.tweetSearch[tweet].text)
           dates.push(this.tweetSearch[tweet].created_at)
           differentDates.add(this.tweetSearch[tweet].created_at)
       }

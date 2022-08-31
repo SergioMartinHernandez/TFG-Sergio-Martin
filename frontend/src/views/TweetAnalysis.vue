@@ -122,7 +122,6 @@ export default {
       try {
         this.saveTweet(idTweet);
         $('#modalTweetSave').modal()
-        //window.alert("Tweet saved successfully");
       } catch (error) {
         console.error(error);
       }

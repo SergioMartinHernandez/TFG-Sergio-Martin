@@ -88,6 +88,7 @@ export default {
       if(this.search.type=="Tweet") {
         try {
           await this.createSearch(this.search);
+          await this.$store.dispatch('viewTweetSearch');
           this.$router.push('/tweetanalysis');
         } catch (error) {
           throw 'Error in create search tweet. Please try again.';
@@ -97,6 +98,8 @@ export default {
       else if(this.search.type=="User"){
         try {
           await this.createSearch(this.search);
+          await this.$store.dispatch('viewUserSearch');
+          await this.$store.dispatch('viewTweetSearch');
           this.$router.push('/useranalysis');
         } catch (error) {
           throw 'Error in create search user. Please try again.';
