@@ -20,6 +20,8 @@
           </div>
         </div>
       </div>
+      <h4>Analysis of user: @{{ userSearch.username }}</h4>
+      <br/>
       <div class="row align-items-center">
         <div class="col-md-auto">
           <!-- Foto de perfil -->
@@ -93,6 +95,7 @@
         <div class="col">
             <div id="cards" v-for="tweet in tweetSearch" class="card bg-light">
               <div class="card-body">
+                <h5 class="text-right"><strong>{{ index+1 }}</strong></h5>
                 <h6><strong>Username: </strong>{{ tweet.author }}</h6>
                 <!-- Texto del tweet -->
                 <p>{{ tweet.text }}</p>

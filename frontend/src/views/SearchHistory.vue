@@ -8,6 +8,7 @@
             <th scope="col">#</th>
             <th scope="col">Title</th>
             <th scope="col">Type</th>
+            <th scope="col">Date</th>
           </tr>
         </thead>
         <tbody>
@@ -16,6 +17,7 @@
             <th scope="row">{{ index }}</th>
             <td>{{ search.title }}</td>
             <td>{{ search.type }}</td>
+            <td>{{ search.created_at }}</td>
           </tr>
         </tbody>
       </table>
@@ -25,7 +27,7 @@
 
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters} from 'vuex';
 
 export default {
   name: 'SearchHistory',

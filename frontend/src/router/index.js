@@ -10,6 +10,8 @@ import UserAnalysis from '@/views/UserAnalysis.vue';
 import TweetAnalysis from '@/views/TweetAnalysis.vue';
 import SearchHistory from '@/views/SearchHistory.vue';
 import TweetSaved from '@/views/TweetSaved.vue';
+import Faq from '@/views/FAQ.vue';
+import About from '@/views/About.vue';
 
 Vue.use(VueRouter)
 
@@ -59,7 +61,16 @@ const routes = [
     component: TweetSaved,
     meta: {requiresAuth: true}
   },
-
+  {
+    path: '/faq',
+    name: 'Faq',
+    component: Faq,
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About,
+  },
 ]
 
 const router = new VueRouter({

@@ -1,8 +1,29 @@
 <template>
   <section>
-      <div v-if="isLoggedIn" id="logout">
-       <div id="search-container" class="container">
-        <p id="title">Proyecto de TFG de Sergio Martín Hernández</p>
+    <!-- Modal para muestra de errores en la validacion  -->
+    <div class="modal fade" id="modalHome" tabindex="-1" role="dialog" aria-labelledby="modalHome" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Error</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Select filter by Tweet or User first, please.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div v-if="isLoggedIn" id="logout">
+      <div id="search-container" class="container">
+        <h2>Datter, the analysis of Twitter in your hand</h2>
+        <h5>Perform a search to get started</h5>
+        <br/>
         <!-- Barra de busqueda de la pagina -->
         <div id="search-bar" class="input-group mb-3">
           <!-- Filtros de busqueda -->
@@ -10,61 +31,65 @@
             <option selected>Tweet</option>
             <option>User</option>
           </select>
-          <input id="search-input" type="text" v-model="search.title" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
+          <input id="search-input" type="text" v-model="search.title" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" v-on:keyup.enter="SaveSearch()">
           <button id="search-button" type="button" class="btn btn-primary" @click="SaveSearch()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
             </svg>
           </button>
         </div> 
+        <br/>
+        <br/>
+        <h5><strong>Last five searches</strong></h5>
+        <table class="table">
+          <thead>
+            <!-- Columnas tabla de últimas 5 búsquedas  -->
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Contenido tabla de últimas 5 búsquedas -->
+            <tr v-for="search in user.searchs.slice(-5)" :key="search.id">
+              <td>{{ search.title }}</td>
+              <td>{{ search.type }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div> 
-           </div>
-      <div v-else>
-        <!-- <div class="row align-items-center">
-          <div class="col-6">
-            <img id="image-home" src="../assets/home.png" class="img-fluid">
-          </div>
-          <div class="col">
+    </div>
+    <div v-else>
+      <section class="home_banner_area">
+        <div class="banner_inner">
+          <div class="container">
             <div class="row">
-               Boton de inicio de sesion 
-              <button id="login-button" type="button" class="btn btn-outline-primary btn-lg btn-block" @click="$router.push('/login')">Log in</button>
-            </div>
-            <div class="row">
-              Boton de registro de usuario
-              <button id="signup-button" type="button" class="btn btn-lg btn-dark btn-block" @click="$router.push('/signup')">Sign up</button>
-            </div>
-          </div>
-        </div> -->
-        <section class="home_banner_area">
-          <div class="banner_inner">
-            <div class="container">
-              <div class="row">
-                <div class="col-lg-7">
-                  <div class="banner_content">
-                    <img class="" src="../assets/logoWhite.png" alt="">
-                    <h4 class="text">Tool For Twitter Data Analysis</h4>
-                    <div class="d-flex align-items-center">
-                      <button id="login-button" type="button" class="btn btn-secondary btn-lg btn-block" @click="$router.push('/login')">Log In</button>
-                      <button id="signup-button" type="button" class="btn btn-lg btn-dark btn-block" @click="$router.push('/signup')">Sign Up</button>
-                    </div>
+              <div class="col-lg-7">
+                <div class="banner_content">
+                  <img class="" src="../assets/logoWhite.png" alt="">
+                  <h4 class="text">Tool For Twitter Data Analysis</h4>
+                  <div class="d-flex align-items-center">
+                    <button id="login-button" type="button" class="btn btn-secondary btn-lg btn-block" @click="$router.push('/login')">Log In</button>
+                    <button id="signup-button" type="button" class="btn btn-lg btn-dark btn-block" @click="$router.push('/signup')">Sign Up</button>
                   </div>
                 </div>
-                <div class="col-lg-5">
-                  <div class="home_right_img">
-                    <img id="image-home" class="" src="../assets/home-image.png" alt="">
-                  </div>
+              </div>
+              <div class="col-lg-5">
+                <div class="home_right_img">
+                  <img id="image-home" class="" src="../assets/home-image.png" alt="">
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
     </div>
   </section>
 </template>
 
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   name: 'Home',
   data(){
@@ -75,10 +100,14 @@ export default {
       }
     };
   },
+  created: function() {
+    this.$store.dispatch('viewMe');
+  },
   computed : {
     isLoggedIn: function() {
       return this.$store.getters.isAuthenticated;
     },
+    ...mapGetters({user: 'stateUser' }),
   },
   // Metodo de creacion de una busqueda
   methods: {
@@ -105,7 +134,7 @@ export default {
           throw 'Error in create search user. Please try again.';
         }
       } else {
-        window.alert("Select filter by Tweet or User first, please");
+        $('#modalHome').modal()
       }
     }
   }
@@ -117,13 +146,6 @@ export default {
   background-color: aliceblue;
   margin-top: 7%;
   padding: 5em;
-}
-#title {
-  text-align: center;
-  font-size: x-large;
-  font-family: revert;
-  font-weight: bold;
-  padding-bottom: 20px;
 }
 #search-bar {
   font-family: Arial, Helvetica, sans-serif;
