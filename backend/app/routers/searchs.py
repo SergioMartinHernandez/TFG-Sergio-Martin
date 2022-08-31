@@ -98,7 +98,7 @@ def create_search_for_user(
     db: Session = Depends(get_db),
 ):
     searchquery = se.searchsDAOImpl.create_user_search(search=search, user_id=current_user.id, db=db)
-    if search.type == "tweet":
+    if search.type == "Tweet":
         # hacer busqueda de TweetSearch
         se.searchsDAOImpl.search_tweets(query=searchquery.title, search_id=searchquery.id, db=db)
     else:
