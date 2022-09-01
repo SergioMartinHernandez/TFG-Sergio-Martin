@@ -5,16 +5,16 @@
                 <div class="col-lg-6">
                     <div class="about-text go-to">
                         <h3>About Datter</h3>
-                        <p>I design and develop services for customers of all sizes, specializing in creating stylish, modern websites, web services and online stores. My passion is to design digital user experiences through the bold interface and meaningful interactions.</p>
+                        <p>Datter is a final project for the degree of computer engineering at USAL, it is a tool for the analysis of twitter data that is developed with Fastapi for the backend and vuejs for the frontend.</p>
                         <br/>
                         <h3>About Me</h3>
-                        <p>I design and develop services for customers of all sizes, specializing in creating stylish, modern websites, web services and online stores. My passion is to design digital user experiences through the bold interface and meaningful interactions.</p>
+                        <p>I am sergio martin hernandez, a student of computer engineering at the usal, I am 22 years old and this is my first big project. I hope you like the project and that you can get a lot of use out of it.</p>
                         <br/>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="about-logo">
-                        <img src="../assets/logo2.png" title="" alt="">
+                        <img src="../assets/logo2.png">
                     </div>
                 </div>
             </div>

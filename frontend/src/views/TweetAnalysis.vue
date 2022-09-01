@@ -165,7 +165,7 @@ export default {
         labels: [1,2,3,4,5,6,7,8,9,10],
         datasets: [
           {
-            label: "Total interactions",
+            label: "Total interactions tweet below",
             backgroundColor: "#f87979",
             data: value
           }
