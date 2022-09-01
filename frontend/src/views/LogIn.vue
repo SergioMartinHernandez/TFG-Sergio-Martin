@@ -80,8 +80,8 @@ export default {
             await this.logIn(User);
             this.$router.push('/search');
         } catch (error) {
-            $('#modalLogIn').modal()
-            throw 'There was a problem logging in. Check email and password.';
+          $('.modal').modal('show');
+          throw 'There was a problem logging in. Check email and password.';
         }  
     }
   }
@@ -424,7 +424,7 @@ export default {
   
   .img, .login-wrap {
     width: 50%;
-    background-color: aliceblue; }
+    background-color: lavender; }
     @media (max-width: 991.98px) {
       .img, .login-wrap {
         width: 100%; } }

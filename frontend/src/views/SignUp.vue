@@ -438,7 +438,7 @@ export default {
   
   .img, .signup-wrap {
     width: 50%;
-    background-color: aliceblue; }
+    background-color: lavender; }
     @media (max-width: 991.98px) {
       .img, .signup-wrap {
         width: 100%; } }

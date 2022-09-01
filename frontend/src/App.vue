@@ -20,7 +20,7 @@ export default {
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  background-color: #0d6efd;
+  background-color: #f5f5ff;
   min-height: 100vh;
 }
 

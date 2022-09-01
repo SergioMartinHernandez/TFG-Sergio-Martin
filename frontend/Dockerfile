@@ -12,7 +12,7 @@ RUN npm install
 # copiar los archivos y carpetas del proyecto al directorio de trabajo actual (es decir, la carpeta 'app')
 COPY . .
 
-CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "dev_mode"]
 
 # CMD ["npm", "run", "build"]
 

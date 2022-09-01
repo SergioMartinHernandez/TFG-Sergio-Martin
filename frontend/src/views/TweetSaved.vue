@@ -1,8 +1,8 @@
 <template>
-  <section>
+  <section class="section about-section gray-bg">
     <div class="container">
       <!-- Modal para muestra de correcta eliminacion de tweet  -->
-      <div class="modal fade" id="modalTweetDelete" tabindex="-1" role="dialog" aria-labelledby="modalTweetDelete" aria-hidden="true">
+      <!-- <div class="modal fade" id="modalTweetDelete" tabindex="-1" role="dialog" aria-labelledby="modalTweetDelete" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -19,7 +19,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="col">
           <div id="cards" v-for="tweet in tweetSaved" :key="tweet.id" class="card bg-light">
@@ -94,7 +94,8 @@ export default {
     deleteTweetUser(idTweet) {
       try {
         this.deleteTweet(idTweet);
-        $('#modalTweetDelete').modal()
+        //$('#modalTweetDelete').modal()
+        document.location.reload()
       } catch (error) {
         console.error(error);
       }
@@ -107,10 +108,13 @@ export default {
 #profile-picture {
     height: 75px;
 }
-.container{
-    margin-top: 3%;
-    padding: 5em;
-    background-color: aliceblue;
+.section {
+    padding: 100px 0;
+    position: relative;
+}
+.gray-bg {
+    background-color: #f5f5ff;
+    height: 100%;
 }
 /* Separador entre la informacion del usuario y los datos de seguidores */
 hr.solid {

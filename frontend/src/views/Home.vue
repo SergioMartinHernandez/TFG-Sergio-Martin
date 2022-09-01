@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-lg-7">
             <div class="banner_content">
-              <img class="" src="../assets/logoWhite.png" alt="">
+              <img class="img-fluid" src="../assets/logo2.png" alt="">
               <h4 class="text">Tool For Twitter Data Analysis</h4>
               <div class="d-flex align-items-center">
                 <button id="login-button" type="button" class="btn btn-secondary btn-lg btn-block" @click="$router.push('/login')">Log In</button>

@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="section about-section gray-bg">
     <div class="container">
       <!-- Modal para muestra de correcto guardado de tweet -->
       <div class="modal fade" id="modalTweetSave" tabindex="-1" role="dialog" aria-labelledby="modalTweetSave" aria-hidden="true">
@@ -240,10 +240,13 @@ export default {
 #profile-picture {
     height: 75px;
 }
-.container{
-    margin-top: 3%;
-    padding: 5em;
-    background-color: aliceblue;
+.section {
+    padding: 100px 0;
+    position: relative;
+}
+.gray-bg {
+    background-color: #f5f5ff;
+    height: 100%;
 }
 /* Separador entre la informacion del usuario y los datos de seguidores */
 hr.solid {

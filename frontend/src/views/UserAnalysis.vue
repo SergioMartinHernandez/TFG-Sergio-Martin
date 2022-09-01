@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="section about-section gray-bg">
     <div class="container">
       <!-- Modal para muestra de correcto guardado de tweet -->
       <div class="modal fade" id="modalTweetSave" tabindex="-1" role="dialog" aria-labelledby="modalTweetSave" aria-hidden="true">
@@ -22,32 +22,37 @@
       </div>
       <h4>Analysis of user: @{{ userSearch.username }}</h4>
       <br/>
-      <div class="row align-items-center">
+      <div class="row">
         <div class="col-md-auto">
           <!-- Foto de perfil -->
           <img :src="userSearch.profile_image_url" id="profile-picture" class="rounded-circle img-fluid" alt="">
         </div>
-        <div id="description" class="col-md-auto">
-        <!-- Nombre de usuario -->
-        @{{ userSearch.username }}
-        <!-- Verificado si tiene -->
+        <div class="col align-self-center">
+          <!-- Nombre de usuario -->
+          @{{ userSearch.username }}
+          <!-- Verificado si tiene -->
           <svg v-if="userSearch.verified" xmlns="http://www.w3.org/2000/svg" id  width="16" height="16" fill="currentColor" class="bi bi-patch-check" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
             <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/>
           </svg>
-          <br>
+        </div>
+      </div> 
+      <div class="row"> 
+        <div id="description" class="col-md-auto">
           <!-- Descripcion -->
           <strong>Description: </strong>{{ userSearch.description }}
         </div>
-        <div class="col">
+      </div>
+      <div class="row">
+        <div class="col-4">
           <!-- Nombre -->
           <strong>Name: </strong>{{ userSearch.name }}
         </div>
-        <div class="col">
+        <div class="col-4">
           <!-- Fecha de creacion de la cuenta -->
           <strong>Created at: </strong>{{ userSearch.created_at }}
         </div>
-        <div class="col">
+        <div class="col-4">
           <!-- Ubicacion -->
           <strong>Location: </strong>{{ userSearch.location }}
         </div>
@@ -142,6 +147,39 @@
                 </div>
               </div>  
             </div>
+            <!-- PRUEBA DE TABLAS DE TWEETS -->
+            <!-- <div class="table-responsive">
+              <table class="table">
+                <thead class="thead-dark">
+
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Text</th>
+                    <th scope="col">Replys</th>
+                    <th scope="col">Retweets</th>
+                    <th scope="col">Likes</th>
+                    <th scope="col">Created at</th>
+                    <th scope="col">Save tweet</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr v-for="(tweet, index) in tweetSearch" id='tweetssaved'>
+                    <th scope="row">{{ index + 1 }}</th>
+                    <td>{{ tweet.author }}</td>
+                    <td>{{ tweet.text }}</td>
+                    <td>{{ tweet.reply_count }}</td>
+                    <td>{{ tweet.retweet_count }}</td>
+                    <td>{{ tweet.like_count }}</td>
+                    <td>{{ tweet.created_at }}</td>
+                    <td><input class="form-check-input" type="checkbox" v-model="checkedTweets" :id="tweet.id"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <button class="btn btn-primary" type="submit">Save tweet</button>
+              <span>Checked names: {{ checkedTweets }}</span>
+          </div> -->
         </div>
       </div>
     </div>
@@ -167,6 +205,11 @@ export default {
   },
   // Metodo para guardar tweet en el perfil
   name: 'SaveTweet',
+  data(){
+    return {
+      checkedTweets: []
+    }
+  },
   methods: {
     ...mapActions(['saveTweet']),
     saveTweetUser(idTweet) {
@@ -267,10 +310,13 @@ export default {
 #profile-picture {
     height: 75px;
 }
-.container{
-    margin-top: 3%;
-    padding: 5em;
-    background-color: aliceblue;
+.section {
+    padding: 100px 0;
+    position: relative;
+}
+.gray-bg {
+    background-color: #f5f5ff;
+    height: 100%;
 }
 /* Separador entre la informacion del usuario y los datos de seguidores */
 hr.solid {

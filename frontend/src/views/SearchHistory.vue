@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="section about-section gray-bg">
     <div class="container">
       <table class="table">
         <thead>
@@ -41,9 +41,12 @@ export default {
 </script>
 
 <style scoped>
-.container{
-    margin-top: 3%;
-    padding: 5em;
-    background-color: aliceblue;
+.section {
+    padding: 100px 0;
+    position: relative;
+}
+.gray-bg {
+    background-color: #f5f5ff;
+    height: 100%;
 }
 </style>

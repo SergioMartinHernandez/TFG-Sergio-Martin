@@ -68,6 +68,7 @@ body{margin-top:20px;}
     position: relative;
     z-index: 1;
     background-color: #f5f5ff;
+    height: 100vh;
 }
 
 .faq-accordian {

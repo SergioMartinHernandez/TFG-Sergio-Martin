@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="section about-section gray-bg">
     <div class="container">
       <div class="row align-items-center">
         <div class="col">
@@ -151,10 +151,13 @@ export default {
 </script>
 
 <style scoped>
-  .container{
-    margin-top: 3%;
-    padding: 5em;
-    background-color: aliceblue;
+  .section {
+      padding: 100px 0;
+      position: relative;
+  }
+  .gray-bg {
+      background-color: #f5f5ff;
+      height: 100%;
   }
   #label-signup {
     margin-left: 16px;

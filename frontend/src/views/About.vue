@@ -5,10 +5,10 @@
                 <div class="col-lg-6">
                     <div class="about-text go-to">
                         <h3>About Datter</h3>
-                        <p>Datter is a final project for the degree of computer engineering at USAL, it is a tool for the analysis of twitter data that is developed with Fastapi for the backend and vuejs for the frontend.</p>
+                        <p>Datter is a final project for the degree of computer engineering at USAL, it is a tool for the analysis of twitter data that is developed with FastAPI for the backend and VueJS for the frontend.</p>
                         <br/>
                         <h3>About Me</h3>
-                        <p>I am sergio martin hernandez, a student of computer engineering at the usal, I am 22 years old and this is my first big project. I hope you like the project and that you can get a lot of use out of it.</p>
+                        <p>I am Sergio Martín Hernández, a student of computer engineering at the usal, I am 22 years old and this is my first big project. I hope you like the project and that you can get a lot of use out of it.</p>
                         <br/>
                     </div>
                 </div>
@@ -34,6 +34,7 @@ body{
 }
 .gray-bg {
     background-color: #f5f5ff;
+    height: 100vh;
 }
 img {
     max-width: 100%;
