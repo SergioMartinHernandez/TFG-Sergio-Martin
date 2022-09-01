@@ -78,7 +78,7 @@ export default {
             User.append('username', this.form.username);
             User.append('password', this.form.password);
             await this.logIn(User);
-            this.$router.push('/');
+            this.$router.push('/search');
         } catch (error) {
             $('#modalLogIn').modal()
             throw 'There was a problem logging in. Check email and password.';
@@ -102,7 +102,7 @@ export default {
  section {
     display: block; }
   
-  h3, h5 {
+  h3  {
     margin-top: 0;
     margin-bottom: 0.5rem; }
   
@@ -164,7 +164,7 @@ export default {
     font: inherit;
     -webkit-appearance: button; }
   
-  h3, h5 {
+  h3 {
     margin-bottom: 0.5rem;
     font-weight: 500;
     line-height: 1.2; }
@@ -172,8 +172,6 @@ export default {
   h3 {
     font-size: 1.75rem; }
   
-  h5 {
-    font-size: 1.25rem; }
   
   .container {
     width: 100%;
@@ -401,7 +399,7 @@ export default {
       -webkit-box-shadow: none;
       box-shadow: none; }
   
-  h3, h5 {
+  h3 {
     line-height: 1.5;
     font-weight: 400;
     font-family: "Lato", Arial, sans-serif;

@@ -93,7 +93,7 @@
       </div>
       <div class="row">
         <div class="col">
-            <div id="cards" v-for="tweet in tweetSearch" class="card bg-light">
+            <div id="cards" v-for="(tweet, index) in tweetSearch" class="card bg-light">
               <div class="card-body">
                 <h5 class="text-right"><strong>{{ index+1 }}</strong></h5>
                 <h6><strong>Username: </strong>{{ tweet.author }}</h6>

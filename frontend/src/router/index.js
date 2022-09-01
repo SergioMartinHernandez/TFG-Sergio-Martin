@@ -5,6 +5,7 @@ import store from '@/store';
 import Home from '@/views/Home.vue'
 import LogIn from '@/views/LogIn.vue';
 import SignUp from '@/views/SignUp.vue';
+import Search from '@/views/Search.vue';
 import Account from '@/views/Account.vue';
 import UserAnalysis from '@/views/UserAnalysis.vue';
 import TweetAnalysis from '@/views/TweetAnalysis.vue';
@@ -30,6 +31,12 @@ const routes = [
     path: '/signup',
     name: 'SignUp',
     component: SignUp,
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: Search,
+    meta: {requiresAuth: true}
   },
   {
     path: '/account',
