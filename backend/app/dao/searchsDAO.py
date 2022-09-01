@@ -3,10 +3,10 @@ import schemas
 
 
 class SearchsDAO:
-    def search_tweets(query:str, search_id: int, db: Session):
+    def search_tweets(query:str, search_id: int, start_date: str, end_date:str, num_tweets:int, db: Session):
         pass
 
-    def search_user(username:str, search_id: int, db: Session):
+    def search_user(username:str, search_id: int, start_date: str, end_date:str, num_tweets:int, db: Session):
         pass
 
     def create_user_search(search: schemas.SearchCreate, user_id: int, db: Session):

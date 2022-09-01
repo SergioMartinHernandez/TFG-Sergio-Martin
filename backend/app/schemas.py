@@ -38,7 +38,7 @@ class TweetSearch(TweetSearchBase):
 class UserSearchBase(BaseModel):
     created_at: date
     description: str
-    location: str
+    location: Optional[str]
     name: str
     profile_image_url: str
     followers_count: int
@@ -91,6 +91,9 @@ class TweetSaved(TweetSavedBase):
 class SearchBase(BaseModel):
     title: str
     type: str
+    start_date: str
+    end_date: str
+    num_tweets: int
 
 # Modelo Pydantic de creacion de busqueda
 class SearchCreate(SearchBase):

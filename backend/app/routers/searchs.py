@@ -100,10 +100,10 @@ def create_search_for_user(
     searchquery = se.searchsDAOImpl.create_user_search(search=search, user_id=current_user.id, db=db)
     if search.type == "Tweet":
         # hacer busqueda de TweetSearch
-        se.searchsDAOImpl.search_tweets(query=searchquery.title, search_id=searchquery.id, db=db)
+        se.searchsDAOImpl.search_tweets(query=searchquery.title, search_id=searchquery.id, start_date=searchquery.start_date, end_date=searchquery.end_date, num_tweets=searchquery.num_tweets, db=db)
     else:
         # hacer busqueda de usertweet
-        se.searchsDAOImpl.search_user(username=searchquery.title, search_id=searchquery.id, db=db)
+        se.searchsDAOImpl.search_user(username=searchquery.title, search_id=searchquery.id, start_date=searchquery.start_date, end_date=searchquery.end_date, num_tweets=searchquery.num_tweets, db=db)
     return searchquery
 
 
