@@ -17,9 +17,11 @@ class searchsDAOImpl(SearchsDAO):
         return db_tweet_search
 
     def search_tweets(query:str, search_id: int, start_date: str, end_date:str, num_tweets:int, db: Session):
+        start_date=start_date+"T00:00:00+02:00"
+        end_date=end_date+"T00:00:00+02:00"
         query = query + " is:verified"
         client = tweepy.Client(bearer_token=BEARER_TOKEN)
-        tweets = client.search_recent_tweets(query=query, tweet_fields=['text','author_id','created_at','public_metrics','lang','source'],user_fields=['username'], expansions='author_id', max_results=num_tweets)
+        tweets = client.search_recent_tweets(query=query, end_time=end_date, start_time=start_date, tweet_fields=['text','author_id','created_at','public_metrics','lang','source'],user_fields=['username'], expansions='author_id', max_results=num_tweets)
 
         users = {u["id"]: u for u in tweets.includes['users']}
         tweet_search = {}
@@ -42,6 +44,8 @@ class searchsDAOImpl(SearchsDAO):
     def search_user(username:str, search_id: int, start_date: str, end_date:str, num_tweets:int, db: Session):
         username=username.replace(" ", "")
         username=username.replace("@", "")
+        start_date=start_date+"T00:00:00+02:00"
+        end_date=end_date+"T00:00:00+02:00"
         client = tweepy.Client(bearer_token=BEARER_TOKEN)
         user = client.get_user(username=username,user_fields=['created_at','description','location','name','profile_image_url','public_metrics','username','verified'])
         user_search = {}
@@ -60,7 +64,7 @@ class searchsDAOImpl(SearchsDAO):
         searchsDAOImpl.create_search_user_search(db=db, user_search=user_search, search_id=search_id)
 
         query = "from:" + username
-        tweets = client.search_recent_tweets(query=query, tweet_fields=['text','author_id','created_at','public_metrics','lang','source'],user_fields=['username'], expansions='author_id', max_results=num_tweets)
+        tweets = client.search_recent_tweets(query=query, end_time=end_date, start_time=start_date, tweet_fields=['text','author_id','created_at','public_metrics','lang','source'],user_fields=['username'], expansions='author_id', max_results=num_tweets)
 
         users = {u["id"]: u for u in tweets.includes['users']}
         tweet_search = {}
