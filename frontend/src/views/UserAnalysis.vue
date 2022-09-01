@@ -147,39 +147,6 @@
                 </div>
               </div>  
             </div>
-            <!-- PRUEBA DE TABLAS DE TWEETS -->
-            <!-- <div class="table-responsive">
-              <table class="table">
-                <thead class="thead-dark">
-
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Author</th>
-                    <th scope="col">Text</th>
-                    <th scope="col">Replys</th>
-                    <th scope="col">Retweets</th>
-                    <th scope="col">Likes</th>
-                    <th scope="col">Created at</th>
-                    <th scope="col">Save tweet</th>
-                  </tr>
-                </thead>
-                <tbody>
-
-                  <tr v-for="(tweet, index) in tweetSearch" id='tweetssaved'>
-                    <th scope="row">{{ index + 1 }}</th>
-                    <td>{{ tweet.author }}</td>
-                    <td>{{ tweet.text }}</td>
-                    <td>{{ tweet.reply_count }}</td>
-                    <td>{{ tweet.retweet_count }}</td>
-                    <td>{{ tweet.like_count }}</td>
-                    <td>{{ tweet.created_at }}</td>
-                    <td><input class="form-check-input" type="checkbox" v-model="checkedTweets" :id="tweet.id"></td>
-                  </tr>
-                </tbody>
-              </table>
-              <button class="btn btn-primary" type="submit">Save tweet</button>
-              <span>Checked names: {{ checkedTweets }}</span>
-          </div> -->
         </div>
       </div>
     </div>
