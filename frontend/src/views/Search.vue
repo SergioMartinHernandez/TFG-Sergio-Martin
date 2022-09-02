@@ -62,7 +62,7 @@
                         <th scope="col">Title</th>
                         <th scope="col">Type</th>
                         <th scope="col">Search Day</th>
-                        <th scope="col">Star Date</th>
+                        <th scope="col">Start Date</th>
                         <th scope="col">End Date</th>
                         <th scope="col">Num Tweets</th>
                         <th scope="col">Repeat Search</th>
