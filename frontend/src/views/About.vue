@@ -34,7 +34,7 @@ body{
 }
 .gray-bg {
     background-color: #f5f5ff;
-    height: 100vh;
+    height: 100%;
 }
 img {
     max-width: 100%;
