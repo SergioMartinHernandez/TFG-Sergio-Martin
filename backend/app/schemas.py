@@ -66,7 +66,7 @@ class TweetSavedBase(BaseModel):
     url: str
     text: str
     author: str
-    created_at: date
+    created_at: str
     retweet_count: int
     reply_count: int
     like_count: int

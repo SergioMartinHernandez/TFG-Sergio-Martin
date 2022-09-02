@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+import datetime
 from dependencies import get_db
 from fastapi import Depends
 from sqlalchemy.orm import Session
@@ -17,8 +19,16 @@ class searchsDAOImpl(SearchsDAO):
         return db_tweet_search
 
     def search_tweets(query:str, search_id: int, start_date: str, end_date:str, num_tweets:int, db: Session):
-        start_date=start_date+"T00:00:00+02:00"
-        end_date=end_date+"T00:00:00+02:00"
+        start_date=start_date+"T00:01:00+02:00"
+        
+        dateToday = date.today()
+        if end_date == str(dateToday):
+            time = datetime.datetime.now(datetime.timezone.utc)
+            end_date = time - timedelta(seconds=30)
+        else:
+            end_date=end_date+"T23:59:00+02:00"
+        
+       
         query = query + " is:verified"
         client = tweepy.Client(bearer_token=BEARER_TOKEN)
         tweets = client.search_recent_tweets(query=query, end_time=end_date, start_time=start_date, tweet_fields=['text','author_id','created_at','public_metrics','lang','source'],user_fields=['username'], expansions='author_id', max_results=num_tweets)

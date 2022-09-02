@@ -96,7 +96,7 @@ class TweetSaved(Base):
     url= Column(String)
     text = Column(String)
     author = Column(String)
-    created_at = Column(Date)
+    created_at = Column(String)
     retweet_count = Column(Integer)
     reply_count = Column(Integer)
     like_count = Column(Integer)
