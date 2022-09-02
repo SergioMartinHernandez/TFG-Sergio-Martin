@@ -42,8 +42,7 @@
                                 </div>
                                 <div class="collapse" id="collapseThree" aria-labelledby="headingThree" data-parent="#faqAccordion">
                                     <div class="card-body">
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto quidem facere deserunt sint animi sapiente vitae suscipit.</p>
-                                        <p>Appland is completely creative, lightweight, clean &amp; super responsive app landing page.</p>
+                                        <p>To save a tweet, click on the checkbox on the left side of the analysis page table and then click on the <i>save selected tweets</i> button above the table.</p>
                                     </div>
                                 </div>
                             </div>
