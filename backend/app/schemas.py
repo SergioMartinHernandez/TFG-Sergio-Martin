@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 
@@ -12,7 +12,7 @@ class TweetSearchBase(BaseModel):
     url: str
     text: str
     author: str
-    created_at: date
+    created_at: str
     retweet_count: int
     reply_count: int
     like_count: int
