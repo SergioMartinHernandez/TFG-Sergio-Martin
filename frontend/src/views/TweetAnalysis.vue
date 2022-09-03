@@ -143,7 +143,7 @@ export default {
         header: 'row',
         border: true,
         enableSearch: true,
-        sort: [0,1],
+        sort: [0,1,3,4,5,6],
         stripe: true,
         pagination: true,
         pageSize: 10,
@@ -251,7 +251,7 @@ export default {
         }
       ]
       this.loaded2 = true
-      
+
       // Carga de datos tabla de tweets
       for (let i = 0; i < this.tweetSearch.length; i++) {
         this.params.data.push([i+1, this.tweetSearch[i].author, 

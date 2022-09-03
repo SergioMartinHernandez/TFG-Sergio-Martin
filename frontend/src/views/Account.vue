@@ -63,7 +63,7 @@
             <div class="row"> 
               <!-- Boton de borrar cuenta del usuario con modal para la confirmacion -->
               <div class="col-6">
-                 <button class="btn btn-danger" data-toggle="modal" data-target="#deleteAccountModal">Delete account</button> 
+                <button class="btn btn-danger" @click="showDeleteAccount()">Delete account</button> 
                  <div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -78,16 +78,16 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="deleteAccount()">Confirm</button>
+                        <button type="button" class="btn btn-danger" @click="deleteAccount()">Confirm</button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
               <!-- Boton para confirmar los cambios en el perfil del usuario -->
-              <div id="button-submit" class="col"> <button type="submit" class="btn btn-primary">Confirm changes</button> </div> 
+              <div id="button-submit" class="col"> <button type="button" class="btn btn-primary" @click="updateAccount()">Confirm changes</button> </div> 
               <!-- Boton para cancelar los cambios y volver a la pagina principal -->
-              <div id="button-cancel" class="col"> <button type="button" class="btn btn-dark" @click="$router.push('/')">Cancel</button> </div>  
+              <div id="button-cancel" class="col"> <button type="button" class="btn btn-dark" @click="$router.push('/search')">Cancel</button> </div>  
             </div> 
           </form>   
         </div>
@@ -117,6 +117,9 @@ export default {
   },
   methods: {
     ...mapActions(['deleteUser', 'updateUser']),
+    async showDeleteAccount() {
+      $('#deleteAccountModal').modal()
+    },
     // Metodo para borrar cuenta del usuario
     async deleteAccount() {
       try {
@@ -128,7 +131,7 @@ export default {
       }
     },
     // Metodo para realizar los cambios en la cuenta del usuario
-    async submit() {
+    async updateAccount() {
         const newpassword = document.getElementById("newpassword").value;
         const newpassword2 = document.getElementById("newpassword2").value;
         if(newpassword == newpassword2) {
@@ -140,7 +143,7 @@ export default {
               };
               console.log(updatedUser)
               await this.updateUser(updatedUser);
-              this.$router.push('/');
+              this.$router.push('/search');
             } catch (error) {
               console.log(error);
             }
