@@ -54,8 +54,22 @@ class searchsDAOImpl(SearchsDAO):
     def search_user(username:str, search_id: int, start_date: str, end_date:str, num_tweets:int, db: Session):
         username=username.replace(" ", "")
         username=username.replace("@", "")
-        start_date=start_date+"T00:00:00+02:00"
-        end_date=end_date+"T00:00:00+02:00"
+        timeLimit = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=7)
+        start_date=start_date+"T00:01:00+02:00"
+        
+        dateToday = date.today()
+        if end_date == str(dateToday):
+            time = datetime.datetime.now(datetime.timezone.utc)
+            end_date = time - timedelta(seconds=30)
+        else:
+            end_date=end_date+"T23:59:00+02:00"
+
+        if start_date < str(timeLimit):
+            start_date = timeLimit
+
+        if end_date < str(timeLimit):
+            end_date = datetime.datetime.now(datetime.timezone.utc) - timedelta(seconds=30)
+
         client = tweepy.Client(bearer_token=BEARER_TOKEN)
         user = client.get_user(username=username,user_fields=['created_at','description','location','name','profile_image_url','public_metrics','username','verified'])
         user_search = {}
