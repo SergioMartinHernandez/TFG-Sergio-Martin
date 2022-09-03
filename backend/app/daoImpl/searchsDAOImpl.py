@@ -20,6 +20,7 @@ class searchsDAOImpl(SearchsDAO):
 
     def search_tweets(query:str, search_id: int, start_date: str, end_date:str, num_tweets:int, db: Session):
         start_date=start_date+"T00:01:00+02:00"
+        timeLimit = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=7)
         
         dateToday = date.today()
         if end_date == str(dateToday):
@@ -27,6 +28,12 @@ class searchsDAOImpl(SearchsDAO):
             end_date = time - timedelta(seconds=30)
         else:
             end_date=end_date+"T23:59:00+02:00"
+
+        if start_date < str(timeLimit):
+            start_date = timeLimit
+
+        if end_date < str(timeLimit):
+            end_date = datetime.datetime.now(datetime.timezone.utc) - timedelta(seconds=30)
         
        
         query = query + " is:verified"
