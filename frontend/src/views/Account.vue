@@ -78,7 +78,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger" @click="deleteAccount()">Confirm</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" @click="deleteAccount()">Confirm</button>
                       </div>
                     </div>
                   </div>

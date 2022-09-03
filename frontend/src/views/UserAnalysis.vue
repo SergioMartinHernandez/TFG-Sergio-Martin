@@ -96,9 +96,28 @@
           </div>
         </div>
       </div>
-      <!-- Boton guardar tweets -->
-      <button type="button" class="btn btn-primary" @click="saveTweets()">Save selected tweets</button>
-      <!-- <button type="button" class="btn btn-secondary" @click="downloadCSV()">Download csv</button> -->
+      <div class="row">
+        <div class="col">
+          <!-- Boton guardar tweets -->
+          <button type="button" class="btn btn-primary" @click="saveTweets()">Save selected tweets</button>
+        </div>
+        <div class="col">
+          <!-- Boton exportar tweets a csv -->
+          <vue-json-to-csv :json-data="tweetSearch" 
+          :labels="{
+            author: { title: 'Author' },
+            text: { title: 'Text' },
+            reply_count: { title: 'Reply count'},
+            retweet_count: { title: 'Retweet count'},
+            like_count: { title: 'Likes count'},
+            created_at: { title: 'Created at'},
+            url: { title: 'URL'},
+          }"
+          :csv-title="'TweetSearchData'" :separator="';'">
+            <button type="button" class="btn btn-success" style="float: right;">Download csv tweets</button>
+          </vue-json-to-csv>
+        </div>
+      </div>
       <!-- Tabla con los tweets -->
       <vue-table-dynamic :params="params" ref="table" @select="onSelect" @selection-change="onSelectionChange"></vue-table-dynamic>
     </div>
@@ -111,6 +130,8 @@ import { mapGetters, mapActions } from 'vuex';
 import wordcloud from 'vue-wordcloud'
 import VueApexCharts from 'vue-apexcharts'
 import VueTableDynamic from 'vue-table-dynamic'
+import VueJsonToCsv from 'vue-json-to-csv'
+
 
 export default {
 
@@ -123,7 +144,7 @@ export default {
 // Graficos Y Tablas
 name: 'GraphsAndTable',
   components: {
-    wordcloud, apexcharts: VueApexCharts, VueTableDynamic 
+    wordcloud, apexcharts: VueApexCharts, VueTableDynamic, VueJsonToCsv
   },
   methods: {
     ...mapActions(['saveTweet']),
@@ -137,10 +158,6 @@ name: 'GraphsAndTable',
     onSelectionChange (checkedDatas, checkedIndexs, checkedNum) {
       //console.log('onSelectionChange: ', checkedDatas, checkedIndexs, checkedNum)
     },
-    // downloadCSV() {
-    //   // var html = document.querySelector("vue-table-dynamic");
-	  //   // htmlToCSV(html, "students.csv");
-    // },
     // Metodo para guardar tweet en el perfil
     saveTweets() {
       var data = this.$refs.table.getCheckedRowDatas(true)
@@ -196,7 +213,7 @@ name: 'GraphsAndTable',
         showCheck: true,
         columnWidth: [{column: 0, width: 80},{column: 1, width: 130}, {column: 2, width: 1800},{column: 3, width: 110}, {column: 4, width: 110},{column: 5, width: 110},{column: 6, width: 120},{column: 7, width: 400}],
         rowHeight: 70,
-      }
+      },
     }
   },
   async mounted () {
@@ -242,7 +259,7 @@ name: 'GraphsAndTable',
       var counter = new Array()
       wordsRepeated.forEach(function (value, key, mapObj) 
       { 
-          if(wordsRepeated.size > 10) {
+          if(wordsRepeated.size > 30) {
             wordsRepeated.delete(key)
           } else {
             tweetObject = {name: key, value: value}
@@ -295,7 +312,7 @@ name: 'GraphsAndTable',
         }
       ]
       this.loaded2 = true
-
+      var aux = new Object
       // Carga de datos tabla de tweets
       for (let i = 0; i < this.tweetSearch.length; i++) {
         this.params.data.push([i+1, this.tweetSearch[i].author, 
@@ -306,7 +323,6 @@ name: 'GraphsAndTable',
         this.tweetSearch[i].created_at,
         this.tweetSearch[i].url])
       }
-      
   }, 
 }
 </script>

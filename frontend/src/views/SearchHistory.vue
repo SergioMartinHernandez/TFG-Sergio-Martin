@@ -1,9 +1,9 @@
 <template>
   <section class="section about-section gray-bg">
     <div class="container">
-      <table class="table">
+      <vue-table-dynamic :params="params" ref="table" @select="onSelect" @selection-change="onSelectionChange"></vue-table-dynamic>
+      <!-- <table class="table">
         <thead>
-          <!-- Columnas tabla de historial de búsquedas  -->
           <tr>
             <th scope="col">#</th>
             <th scope="col">Title</th>
@@ -16,7 +16,6 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Contenido tabla de historial de búsquedas -->
           <tr v-for="(search, index) in user.searchs" :key="search.id">
             <th scope="row">{{ index }}</th>
             <td>{{ search.title }}</td>
@@ -28,7 +27,7 @@
             <td><button type="button" class="btn btn-primary" @click="RepeatSearch(search)">Repeat Search</button></td>
           </tr>
         </tbody>
-      </table>
+      </table> -->
     </div>
   </section>
 </template>
@@ -36,9 +35,31 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import VueTableDynamic from 'vue-table-dynamic'
 
 export default {
   name: 'SearchHistory',
+  components: { VueTableDynamic },
+  data() {
+    return {
+      params: {
+        data: [
+          ['Index', 'Title', 'Type', 'Search Day', 'Start Date', 'End Date', 'Num Tweets'],
+        ],
+        header: 'row',
+        border: true,
+        enableSearch: true,
+        sort: [0,1],
+        stripe: true,
+        pagination: true,
+        pageSize: 10,
+        pageSizes: [5, 10, 20, 50],
+        showCheck: true,
+        columnWidth: [{column: 0, width: 80},{column: 1, width: 200}, {column: 2, width: 80},{column: 3, width: 170}, {column: 4, width: 110},{column: 5, width: 110},{column: 6, width: 100}],
+        rowHeight: 70,
+      },
+    };
+  },
   created: function() {
     this.$store.dispatch('viewMe');
   },
@@ -69,8 +90,33 @@ export default {
               throw 'Error in create search user. Please try again.';
           }
       }
-    }
-  }
+    },
+    onSelect (isChecked, index, data) {
+      //console.log('onSelect: ', isChecked, index, data)
+      //console.log('Checked Data:', this.$refs.table.getCheckedRowDatas(true))
+    },
+    onSelectionChange (checkedDatas, checkedIndexs, checkedNum) {
+      //console.log('onSelectionChange: ', checkedDatas, checkedIndexs, checkedNum)
+    },
+    // downloadCSV() {
+    //   // var html = document.querySelector("vue-table-dynamic");
+	  //   // htmlToCSV(html, "students.csv");
+    // },
+
+  },
+  async mounted () {
+      // Carga de datos tabla de historial de búsquedas
+      for (let i = 0; i < this.user.searchs.length; i++) {
+        this.params.data.push([i+1, 
+        this.user.searchs[i].title,  
+        this.user.searchs[i].type,
+        this.user.searchs[i].created_at, 
+        this.user.searchs[i].start_date, 
+        this.user.searchs[i].end_date,
+        this.user.searchs[i].num_tweets],
+        )
+      }
+  }, 
 }
 </script>
 

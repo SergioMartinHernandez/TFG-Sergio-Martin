@@ -1,8 +1,30 @@
 <template>
   <section class="section about-section gray-bg">
     <div class="container">
-      <!-- Boton eliminar tweets -->
-      <button type="button" class="btn btn-danger" @click="deleteTweetUser()">Delete selected tweets</button>
+      <div class="row">
+        <div class="col">
+          <!-- Boton eliminar tweets -->
+          <button type="button" class="btn btn-danger" @click="deleteTweetUser()">Delete selected tweets</button>
+        </div>
+        <div class="col">
+          <!-- Boton exportar tweets a csv -->
+          <vue-json-to-csv v-if="tweetSaved !== null" :json-data="tweetSaved" 
+          :labels="{
+            author: { title: 'Author' },
+            text: { title: 'Text' },
+            reply_count: { title: 'Reply count'},
+            retweet_count: { title: 'Retweet count'},
+            like_count: { title: 'Likes count'},
+            created_at: { title: 'Created at'},
+            url: { title: 'URL'},
+          }"
+          :csv-title="'TweetSavedData'" :separator="';'">
+            <button type="button" class="btn btn-success" style="float: right;">Download csv tweets</button>
+          </vue-json-to-csv>
+        </div>
+      </div>
+
+      
       <!-- Tabla de tweets guardados -->
       <vue-table-dynamic :params="params" ref="table" @select="onSelect" @selection-change="onSelectionChange"></vue-table-dynamic>
     </div>
@@ -13,10 +35,11 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import VueTableDynamic from 'vue-table-dynamic'
+import VueJsonToCsv from 'vue-json-to-csv'
 
 export default {
   name: 'TweetSaved',
-  components: { VueTableDynamic },
+  components: { VueTableDynamic, VueJsonToCsv },
   data() {
     return {
       params: {
@@ -82,7 +105,8 @@ export default {
         this.tweetSaved[i].retweet_count, 
         this.tweetSaved[i].like_count, 
         this.tweetSaved[i].created_at,
-        this.tweetSaved[i].url])
+        this.tweetSaved[i].url],
+        )
       }
   }, 
 }

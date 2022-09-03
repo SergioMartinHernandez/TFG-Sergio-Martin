@@ -125,7 +125,7 @@ import NumberInputSpinner from 'vue-number-input-spinner';
 
 export default {
 name: 'Home',
-components: { DatePicker, NumberInputSpinner, },
+components: { DatePicker, NumberInputSpinner},
 data(){
     return {
         search: {
@@ -164,7 +164,7 @@ methods: {
         if (this.time_range == null || this.search.type == '' || this.search.title == '')
             $('#modalHome').modal()
         else if(date < this.time_range[1] || date < this.time_range[0]) {
-            $("#modalHome .modal-body").text('Make sure that the start date and end date are after the current day, please');
+            $("#modalHome .modal-body").text('Make sure that the start date and end date are before the current day, please');
             $('#modalHome').modal()
         }
         else {
@@ -216,7 +216,7 @@ methods: {
               throw 'Error in create search user. Please try again.';
           }
       }
-    }
+    },
 },
 }
 </script>
@@ -228,7 +228,7 @@ methods: {
 }
 .gray-bg {
     background-color: #f5f5ff;
-    height: 100vh;
+    height: 100%;
 }
 #search-container {
 background-color: aliceblue;
