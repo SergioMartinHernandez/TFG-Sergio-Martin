@@ -115,7 +115,8 @@ export default {
  */
  
  section {
-    display: block; }
+    display: block; 
+    background-color: #f5f5ff;}
   
   h3 {
     margin-top: 0;
