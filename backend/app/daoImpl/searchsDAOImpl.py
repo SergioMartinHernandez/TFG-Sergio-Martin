@@ -19,14 +19,12 @@ class searchsDAOImpl(SearchsDAO):
         return db_tweet_search
 
     def search_tweets(query:str, search_id: int, start_date: str, end_date:str, num_tweets:int, db: Session):
-        start_date=start_date+"T00:01:00+02:00"
         timeLimit = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=7)
 
         if start_date < str(timeLimit):
             start_date = timeLimit
-
-        if end_date < str(timeLimit):
-            end_date = datetime.datetime.now(datetime.timezone.utc) - timedelta(seconds=30)
+        else :
+            start_date=start_date+"T00:01:00+02:00"
 
         dateToday = date.today()
         if end_date == str(dateToday):
@@ -34,8 +32,10 @@ class searchsDAOImpl(SearchsDAO):
             end_date = time - timedelta(seconds=30)
         else:
             end_date=end_date+"T23:59:00+02:00"
+
+        if end_date < str(timeLimit):
+            end_date = datetime.datetime.now(datetime.timezone.utc) - timedelta(seconds=30)
         
-       
         query = query + " is:verified"
         client = tweepy.Client(bearer_token=BEARER_TOKEN)
         tweets = client.search_recent_tweets(query=query, end_time=end_date, start_time=start_date, tweet_fields=['text','author_id','created_at','public_metrics','lang','source'],user_fields=['username'], expansions='author_id', max_results=num_tweets)
@@ -65,13 +65,14 @@ class searchsDAOImpl(SearchsDAO):
         username=username.replace(" ", "")
         username=username.replace("@", "")
         timeLimit = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=7)
-        start_date=start_date+"T00:01:00+02:00"
+        
+        print(timeLimit)
+        print(start_date)
 
         if start_date < str(timeLimit):
             start_date = timeLimit
-
-        if end_date < str(timeLimit):
-            end_date = datetime.datetime.now(datetime.timezone.utc) - timedelta(seconds=30)
+        else :
+            start_date=start_date+"T00:01:00+02:00"
 
         dateToday = date.today()
         if end_date == str(dateToday):
@@ -79,6 +80,10 @@ class searchsDAOImpl(SearchsDAO):
             end_date = time - timedelta(seconds=30)
         else:
             end_date=end_date+"T23:59:00+02:00"
+
+        if end_date < str(timeLimit):
+            end_date = datetime.datetime.now(datetime.timezone.utc) - timedelta(seconds=30)
+
 
         client = tweepy.Client(bearer_token=BEARER_TOKEN)
         user = client.get_user(username=username,user_fields=['created_at','description','location','name','profile_image_url','public_metrics','username','verified'])
