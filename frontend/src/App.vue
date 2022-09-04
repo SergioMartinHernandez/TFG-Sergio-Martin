@@ -21,10 +21,10 @@ export default {
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   background-color: #f5f5ff;
-  min-height: 100vh;
+  height: 100%;
 }
 
 body, main {
-  height: 100vh;
+  height: 100%;
 }
 </style>

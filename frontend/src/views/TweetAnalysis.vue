@@ -123,6 +123,7 @@ export default {
           }
         }
       }
+      await this.$store.dispatch('viewTweetSaved');
       $('#modalTweetSave').modal()
     }
   },

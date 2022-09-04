@@ -159,16 +159,18 @@ name: 'GraphsAndTable',
       //console.log('onSelectionChange: ', checkedDatas, checkedIndexs, checkedNum)
     },
     // Metodo para guardar tweet en el perfil
-    saveTweets() {
+    async saveTweets() {
       var data = this.$refs.table.getCheckedRowDatas(true)
       for (let i = 1; i < data.length; i++) {
         var url = data[i][7]
         for (let j = 0; j < this.tweetSearch.length; j++) {
           if(this.tweetSearch[j].url===url) {
             this.saveTweet(this.tweetSearch[j].id);
+            await this.$store.dispatch('viewTweetSaved');
           }
         }
       }
+      await this.$store.dispatch('viewTweetSaved');
       $('#modalTweetSave').modal()
     }
   },
