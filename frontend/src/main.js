@@ -1,11 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios';
 import Vue from 'vue';
-import VueComp from '@vue/composition-api';
-
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import VCalendar from "v-calendar";
+
+Vue.use(VCalendar);
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = process.env.VUE_APP_SERVICE_URL;
@@ -27,10 +28,10 @@ try {
   require('bootstrap');
 } catch (e) {}
 
-Vue.use(VueComp);
 
 new Vue({
   router,
   store,
   render: h => h(App)
 }).$mount('#app');
+

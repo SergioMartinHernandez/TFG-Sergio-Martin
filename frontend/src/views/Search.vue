@@ -41,14 +41,37 @@
                 <div class="col">
                     <!-- Selector de fechas de inicio y fin de muestra de tweets -->
                     <label><strong>Select the start date and end date you want to display tweets on</strong></label>
-                    <!-- <DatePicker v-model="time_range" value-type="format" range/> -->
-                    
-                        <VueDatePicker v-model="date" />
+                    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8" @submit.prevent>
+                        <div class="mb-4">
+                        <v-date-picker v-model="range" mode="Date" :masks="masks" :min-date="min_date" :max-date="max_date" is-range>
+                            <template v-slot="{ inputValue, inputEvents, isDragging }">
+                            <div id="date-picker" class="flex flex-col sm:flex-row justify-start items-center">
+                                <input id="container-date1"
+                                    class="flex-grow pl-8 pr-2 py-1 bg-gray-100 border rounded w-full"
+                                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
+                                    :value="inputValue.start"
+                                    v-on="inputEvents.start"
+                                />
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                                </svg>
+                                
+                                <input id="container-date2"
+                                    class="flex-grow pl-8 pr-2 py-1 bg-gray-100 border rounded w-full"
+                                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
+                                    :value="inputValue.end"
+                                    v-on="inputEvents.end"
+                                />
+                            </div>
+                            </template>
+                        </v-date-picker>
+                        </div>
+                    </form>
                 </div>
                 <div class="col">
                     <!-- Selector de cantidad de tweets mostrados -->
                     <label><strong>Select the number of tweets you want to display</strong></label>
-                    <vue-range-slider ref="slider" :min="min_value" :max="max_value" :height="height" v-model="search.num_tweets"></vue-range-slider>
+                    <vue-range-slider id="slider" ref="slider" :min="min_value" :max="max_value" :height="height" v-model="search.num_tweets"></vue-range-slider>
                 </div>
                 
             </div>
@@ -121,16 +144,13 @@
   
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import DatePicker from 'vue2-datepicker';
-import 'vue2-datepicker/index.css';
 import 'vue-range-component/dist/vue-range-slider.css'
 import VueRangeSlider from 'vue-range-component'
-import VueDatePicker from '@mathieustan/vue-datepicker';
-import '@mathieustan/vue-datepicker/dist/vue-datepicker.min.css';
+import VCalendar from "v-calendar";
 
 export default {
 name: 'Home',
-components: { DatePicker, VueRangeSlider,VueDatePicker},
+components: { VCalendar, VueRangeSlider},
 data(){
     return {
         search: {
@@ -140,12 +160,19 @@ data(){
             end_date: '',
             num_tweets: 10,
         },
-        time_range: null,
         min_value:10,
         max_value:50,
         height: 12,
-        date: new Date(),
-        currentDate: new Date(),
+        range: {
+            start: new Date().toISOString().slice(0, 10),
+            end: new Date().toISOString().slice(0, 10),
+        },
+        masks: {
+            input: 'YYYY-MM-DD',
+        },
+        today: new Date(),
+        min_date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+        max_date: new Date().toISOString().slice(0, 10),
     };
     
 },
@@ -157,18 +184,9 @@ computed : {
     return this.$store.getters.isAuthenticated;
     },
     ...mapGetters({user: 'stateUser' }),
-    minDate () {
+    disabledTime () {
       return new Date(
-        this.currentDate.getFullYear() - 1,
-        this.currentDate.getMonth(),
-        this.currentDate.getDate()
-      );
-    },
-    maxDate () {
-      return new Date(
-        this.currentDate.getFullYear() + 1,
-        this.currentDate.getMonth(),
-        this.currentDate.getDate(),
+        this.disabled_time.getDate() - 7,
       );
     },
 },
@@ -176,25 +194,12 @@ methods: {
     ...mapActions(['createSearch']),
     // Metodo de creacion de una busqueda
     async SaveSearch() {
-        var today = new Date(),
-        month = '' + (today.getMonth() + 1),
-        day = '' + today.getDate(),
-        year = today.getFullYear();
-
-        if (month.length < 2)   month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-
-        var date = [year, month, day].join('-');
         // Comprobacion de campos rellenados
-        if (this.time_range == null || this.search.type == '' || this.search.title == '')
+        if (this.search.type == '' || this.search.title == '')
             $('#modalHome').modal()
-        else if(date < this.time_range[1] || date < this.time_range[0]) {
-            $("#modalHome .modal-body").text('Make sure that the start date and end date are before the current day, please');
-            $('#modalHome').modal()
-        }
         else {
-            this.search.start_date = this.time_range[0]
-            this.search.end_date = this.time_range[1]
+            this.search.start_date = this.range.start
+            this.search.end_date = this.range.end
             // Creacion de busqueda de tweets
             if(this.search.type=="Tweet") {
                 try {
@@ -268,5 +273,18 @@ font-size: large;
 }
 #search-filter {
 background: lavender;
+}
+#date-picker {
+    background-color: #f5f5ff;
+}
+#container-date1 {
+    margin-right: 10px;
+}
+#container-date2 {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+#slider {
+    margin-top: 20px;
 }
 </style>

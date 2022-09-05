@@ -76,10 +76,6 @@ export default {
     onSelectionChange (checkedDatas, checkedIndexs, checkedNum) {
       //console.log('onSelectionChange: ', checkedDatas, checkedIndexs, checkedNum)
     },
-    // downloadCSV() {
-    //   // var html = document.querySelector("vue-table-dynamic");
-	  //   // htmlToCSV(html, "students.csv");
-    // },
     // Metodo para eliminar tweet del perfil
     async deleteTweetUser() {
       var data = this.$refs.table.getCheckedRowDatas(true)

@@ -41,7 +41,7 @@
             </div>
             <div class="card-body">
               <!-- Grafica nube -->    
-              <wordcloud v-if="loaded" :data="defaultWords" :fontSize="[50,100]" nameKey="name" valueKey="value" :color="myColors" :showTooltip="true" :wordClick="wordClickHandler"></wordcloud>
+              <wordcloud v-if="loaded" :data="defaultWords" :fontSize="[30,80]" nameKey="name" valueKey="value" :color="myColors" :showTooltip="true" :wordClick="wordClickHandler"></wordcloud>
             </div>
           </div>
         </div>
@@ -208,14 +208,14 @@ export default {
                     wordsSplit[j] = "0";    
                 }    
             } 
-            if(count > 1 && wordsSplit[i] != "0") 
+            if(count >= 1 && wordsSplit[i] != "0") 
               wordsCounter.set(wordsSplit[i],count)
       }  
       var wordsRepeated = new Map([...wordsCounter.entries()].sort((a, b) => a[1] - b[1]));  
       var counter = new Array()
       wordsRepeated.forEach(function (value, key, mapObj) 
       { 
-           if(wordsRepeated.size > 30) {
+           if(wordsRepeated.size > 25) {
              wordsRepeated.delete(key)
           } else {
             tweetObject = {name: key, value: value}
