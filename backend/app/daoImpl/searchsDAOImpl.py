@@ -18,21 +18,17 @@ class searchsDAOImpl(SearchsDAO):
         db.refresh(db_tweet_search)
         return db_tweet_search
 
-    def search_tweets(query:str, search_id: int, start_date: str, end_date:str, num_tweets:int, db: Session):
-        timeLimit = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=7)
-        
+    # Realiza una consulta de tweets a la API de Twitter
+    def search_tweets(query: str, search_id: int, start_date: str, end_date: str, num_tweets: int, db: Session):
         dateToday = date.today()
 
-        if start_date < str(timeLimit):
-            start_date = timeLimit
-        else :
-            start_date=start_date+"T00:01:00+02:00"
-
-        if end_date < str(timeLimit) or end_date == str(dateToday):
+        if end_date == str(dateToday):
             end_date = datetime.datetime.now(datetime.timezone.utc) - timedelta(seconds=30)
-        else:
-            end_date=end_date+"T23:59:00+02:00"
-        
+            start_date=start_date+"T00:01:00+02:00"
+        elif end_date == start_date:
+            end_date = end_date[:-13]
+            end_date = end_date + "23:59:00+02:00"
+                      
         query = query + " is:verified"
         client = tweepy.Client(bearer_token=BEARER_TOKEN)
         tweets = client.search_recent_tweets(query=query, end_time=end_date, start_time=start_date, tweet_fields=['text','author_id','created_at','public_metrics','lang','source'],user_fields=['username'], expansions='author_id', max_results=num_tweets)
@@ -57,23 +53,18 @@ class searchsDAOImpl(SearchsDAO):
                 tweet_search["source"] = tweet.source
                 searchsDAOImpl.create_search_tweet_search(db=db, tweet_search=tweet_search, search_id=search_id)
 
-
+    # Realiza una consulta de usuarios a la API de Twitter
     def search_user(username:str, search_id: int, start_date: str, end_date:str, num_tweets:int, db: Session):
         username=username.replace(" ", "")
         username=username.replace("@", "")
-        timeLimit = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=7)
-        
         dateToday = date.today()
 
-        if start_date < str(timeLimit):
-            start_date = timeLimit
-        else :
-            start_date=start_date+"T00:01:00+02:00"
-
-        if end_date < str(timeLimit) or end_date == str(dateToday):
+        if end_date == str(dateToday):
             end_date = datetime.datetime.now(datetime.timezone.utc) - timedelta(seconds=30)
-        else:
-            end_date=end_date+"T23:59:00+02:00"
+            start_date=start_date+"T00:01:00+02:00"
+        elif end_date == start_date:
+            end_date = end_date[:-13]
+            end_date = end_date + "23:59:00+02:00"
 
 
         client = tweepy.Client(bearer_token=BEARER_TOKEN)
@@ -124,7 +115,6 @@ class searchsDAOImpl(SearchsDAO):
         db.refresh(db_user_search)
         return db_user_search
 
-
     # Crea una busqueda para un usuario
     def create_user_search(search: schemas.SearchCreate, user_id: int, db: Session):
         db_search = models.Search(**search.dict(), owner_id=user_id)
@@ -133,12 +123,11 @@ class searchsDAOImpl(SearchsDAO):
         db.refresh(db_search)
         return db_search
 
-
     # Obtiene todas las busquedas 
     def get_searchs(db: Session, skip: int = 0, limit: int = 100):
         return db.query(models.Search).offset(skip).limit(limit).all()
 
-    # Obtiene todas las busquedas 
+    # Obtiene una búsqueda dado su Id 
     def get_search_by_id(db: Session, search_id: int, user_id: int):
         return db.query(models.Search).filter(models.Search.id == search_id).filter(models.Search.owner_id == user_id).first()
 
