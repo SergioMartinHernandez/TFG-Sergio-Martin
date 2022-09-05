@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios';
 import Vue from 'vue';
+import VueComp from '@vue/composition-api';
 
 import App from './App.vue';
 import router from './router';
@@ -25,6 +26,8 @@ try {
   window.Popper = require('popper.js').default;
   require('bootstrap');
 } catch (e) {}
+
+Vue.use(VueComp);
 
 new Vue({
   router,

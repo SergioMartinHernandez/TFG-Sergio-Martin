@@ -170,6 +170,7 @@ name: 'GraphsAndTable',
           }
         }
       }
+      await this.$store.dispatch('viewMe');
       await this.$store.dispatch('viewTweetSaved');
       $('#modalTweetSave').modal()
     }

@@ -41,12 +41,14 @@
                 <div class="col">
                     <!-- Selector de fechas de inicio y fin de muestra de tweets -->
                     <label><strong>Select the start date and end date you want to display tweets on</strong></label>
-                    <DatePicker v-model="time_range" value-type="format" range/>
+                    <!-- <DatePicker v-model="time_range" value-type="format" range/> -->
+                    
+                        <VueDatePicker v-model="date" />
                 </div>
                 <div class="col">
                     <!-- Selector de cantidad de tweets mostrados -->
                     <label><strong>Select the number of tweets you want to display</strong></label>
-                    <NumberInputSpinner :min="10" :max="50" :integerOnly="true" v-model="search.num_tweets"/>
+                    <vue-range-slider ref="slider" :min="min_value" :max="max_value" :height="height" v-model="search.num_tweets"></vue-range-slider>
                 </div>
                 
             </div>
@@ -121,11 +123,14 @@
 import { mapActions, mapGetters } from 'vuex';
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
-import NumberInputSpinner from 'vue-number-input-spinner';
+import 'vue-range-component/dist/vue-range-slider.css'
+import VueRangeSlider from 'vue-range-component'
+import VueDatePicker from '@mathieustan/vue-datepicker';
+import '@mathieustan/vue-datepicker/dist/vue-datepicker.min.css';
 
 export default {
 name: 'Home',
-components: { DatePicker, NumberInputSpinner},
+components: { DatePicker, VueRangeSlider,VueDatePicker},
 data(){
     return {
         search: {
@@ -136,7 +141,13 @@ data(){
             num_tweets: 10,
         },
         time_range: null,
+        min_value:10,
+        max_value:50,
+        height: 12,
+        date: new Date(),
+        currentDate: new Date(),
     };
+    
 },
 created: function() {
     this.$store.dispatch('viewMe');
@@ -146,6 +157,20 @@ computed : {
     return this.$store.getters.isAuthenticated;
     },
     ...mapGetters({user: 'stateUser' }),
+    minDate () {
+      return new Date(
+        this.currentDate.getFullYear() - 1,
+        this.currentDate.getMonth(),
+        this.currentDate.getDate()
+      );
+    },
+    maxDate () {
+      return new Date(
+        this.currentDate.getFullYear() + 1,
+        this.currentDate.getMonth(),
+        this.currentDate.getDate(),
+      );
+    },
 },
 methods: {
     ...mapActions(['createSearch']),

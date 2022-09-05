@@ -47,6 +47,9 @@ const actions = {
   async createSearch({},search) {
     await axios.post('user/search', search);
   },
+   async deleteSearch({}, searchid) {
+    await axios.delete(`/user/search/${searchid}`);
+  },
   async viewUserSearch({commit}) {
     let {data} = await axios.get('search/user');
     await commit('setUserSearch', data);

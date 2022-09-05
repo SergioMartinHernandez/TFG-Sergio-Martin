@@ -80,7 +80,7 @@ export default {
     //   // var html = document.querySelector("vue-table-dynamic");
 	  //   // htmlToCSV(html, "students.csv");
     // },
-    // Metodo para guardar tweet en el perfil
+    // Metodo para eliminar tweet del perfil
     async deleteTweetUser() {
       var data = this.$refs.table.getCheckedRowDatas(true)
       
