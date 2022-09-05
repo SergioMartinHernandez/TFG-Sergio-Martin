@@ -138,6 +138,15 @@ class searchsDAOImpl(SearchsDAO):
     def get_searchs(db: Session, skip: int = 0, limit: int = 100):
         return db.query(models.Search).offset(skip).limit(limit).all()
 
+    # Obtiene todas las busquedas 
+    def get_search_by_id(db: Session, search_id: int, user_id: int):
+        return db.query(models.Search).filter(models.Search.id == search_id).filter(models.Search.owner_id == user_id).first()
+
+    # Elimina una busqueda de un usuario
+    def delete_search(db: Session, search: schemas.Search):
+        db.delete(search)
+        db.commit()
+
     # Obtiene los tweets de una busqueda
     def get_tweets_of_search(search_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
         return db.query(models.TweetSearch).filter(models.TweetSearch.owner_id == search_id).offset(skip).limit(limit).all()

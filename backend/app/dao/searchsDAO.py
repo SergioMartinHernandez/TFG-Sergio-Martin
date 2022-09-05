@@ -15,6 +15,12 @@ class SearchsDAO:
     def get_searchs(db: Session):
         pass
 
+    def get_search_by_id(db: Session, search_id: int):
+        pass
+
+    def delete_search(db: Session, search: schemas.Search):
+        pass
+
     def get_tweets_of_search(db: Session,search_id: int):
         pass
 
