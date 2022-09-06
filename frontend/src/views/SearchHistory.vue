@@ -23,25 +23,33 @@
         perPage: 10,
         perPageDropdown: [5, 10, 25, 50]
       }">
-      <div slot="selected-row-actions">
-        <button type="button" class="btn btn-danger" @click="deleteSearchUser()">Delete selected searchs</button> 
-      </div>
-      <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'action'">
-          <!-- Boton eliminar busquedas -->
-          <button type="button" class="btn btn-primary" @click="RepeatSearch(props.row)">Repeat Search</button>
-        </span>
-      </template>
-    </vue-good-table>
+        <div slot="selected-row-actions">
+          <button type="button" class="btn btn-danger" @click="deleteSearchUser()">Delete selected searchs</button> 
+        </div>
+        <template slot="table-row" slot-scope="props">
+          <span v-if="props.column.field == 'action'">
+            <!-- Boton eliminar busquedas -->
+            <button type="button" class="btn btn-primary" @click="RepeatSearch(props.row)">Repeat Search</button>
+          </span>
+        </template>
+      </vue-good-table>
     </div>
   </section>
 </template>
 
 
 <script>
+  /**
+   * @vue-data columns - Columnas de la tabla de historial de búsquedas
+   * @vue-data rows - Filas de la tabla de historial de búsquedas
+   * @vue-data selectedRows - Filas seleccionadas en la tabla
+   * @vue-computed {User} user
+   * @vue-event RepeatSearch - Repite una búsqueda realizada anteriormente
+   * @vue-event selectionChanged - Evento de cambio de selección casillero tabla de historial de búsquedas
+   * @vue-event deleteSearchUser - Borra una búsqueda realizada del historial de búsquedas
+   */
 import { mapActions, mapGetters } from 'vuex';
 import { VueGoodTable } from 'vue-good-table';
-// import the styles
 import 'vue-good-table/dist/vue-good-table.css'
 
 export default {
@@ -82,7 +90,7 @@ export default {
       },
       {
         field: "action",
-        label: "Action",
+        label: "Repeat Search",
       }
     ],
     rows: [],

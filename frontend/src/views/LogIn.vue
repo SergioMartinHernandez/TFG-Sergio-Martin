@@ -12,7 +12,7 @@
               </button>
             </div>
             <div class="modal-body">
-              There was a problem logging in. Check email and password.
+              There was a problem logging in. Check username and password.
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -58,6 +58,10 @@
 </template>
 
 <script>
+  /**
+   * @vue-data {Form} form - Formulario de inicio de sesión de un usuario
+   * @vue-event submit - Envío del formulario de inicio de sesión al backend
+   */
 import { mapActions } from 'vuex';
 export default {
   name: 'Login',
@@ -81,7 +85,7 @@ export default {
             this.$router.push('/search');
         } catch (error) {
           $('.modal').modal('show');
-          throw 'There was a problem logging in. Check email and password.';
+          throw 'There was a problem logging in. Check username and password.';
         }  
     }
   }
@@ -92,13 +96,6 @@ export default {
 #image-login {
   background: url(../assets/login.png)
 }
-/*!
- * Bootstrap v4.3.1 (https://getbootstrap.com/)
- * Copyright 2011-2019 The Bootstrap Authors
- * Copyright 2011-2019 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
- 
  section {
     display: block; }
   

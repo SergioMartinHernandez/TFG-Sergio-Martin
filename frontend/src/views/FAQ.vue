@@ -55,8 +55,6 @@
   </template>
   
   
-  
-  
 <style scoped>
 body{margin-top:20px;}
 .section_padding_130 {

@@ -30,8 +30,8 @@
                     <option selected>Tweet</option>
                     <option>User</option>
                 </select>
-                <input id="search-input" type="text" v-model="search.title" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" v-on:keyup.enter="SaveSearch()">
-                <button id="search-button" type="button" class="btn btn-primary" @click="SaveSearch()">
+                <input id="search-input" type="text" v-model="search.title" class="form-control" placeholder="Search" aria-label="Search" v-on:keyup.enter="CreateSearch()">
+                <button id="search-button" type="button" class="btn btn-primary" @click="CreateSearch()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                     </svg>
@@ -41,7 +41,7 @@
                 <div class="col">
                     <!-- Selector de fechas de inicio y fin de muestra de tweets -->
                     <label><strong>Select the start date and end date you want to display tweets on</strong></label>
-                    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8" @submit.prevent>
+                    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8">
                         <div class="mb-4">
                         <v-date-picker v-model="range" mode="Date" :masks="masks" :min-date="min_date" :max-date="max_date" is-range>
                             <template v-slot="{ inputValue, inputEvents, isDragging }">
@@ -72,8 +72,7 @@
                     <!-- Selector de cantidad de tweets mostrados -->
                     <label><strong>Select the number of tweets you want to display</strong></label>
                     <vue-range-slider id="slider" ref="slider" :min="min_value" :max="max_value" :height="height" v-model="search.num_tweets"></vue-range-slider>
-                </div>
-                
+                </div>  
             </div>
             <br/>
             <br/>
@@ -99,8 +98,8 @@
                         <td>{{ search.title }}</td>
                         <td>{{ search.type }}</td>
                         <td>{{ search.created_at }}</td>
-                        <td>{{ search.start_date }}</td>
-                        <td>{{ search.end_date }}</td>
+                        <td>{{ search.start_date.slice(0, -14) }}</td>
+                        <td>{{ search.end_date.slice(0, -14) }}</td>
                         <td>{{ search.num_tweets }}</td>
                         <td><button type="button" class="btn btn-primary" @click="RepeatSearch(search)">Repeat Search</button></td>
                     </tr>
@@ -114,26 +113,26 @@
                 <h5><strong>Last five tweet saved</strong></h5>
                 <table class="table">
                     <thead>
-                    <!-- Columnas tabla de últimos 5 tweets guardados -->
-                    <tr>
-                        <th scope="col">Author</th>
-                        <th scope="col">Text</th>
-                        <th scope="col">Replys</th>
-                        <th scope="col">Retweets</th>
-                        <th scope="col">Likes</th>
-                        <th scope="col">Created at</th>
-                    </tr>
+                        <!-- Columnas tabla de últimos 5 tweets guardados -->
+                        <tr>
+                            <th scope="col">Author</th>
+                            <th scope="col">Text</th>
+                            <th scope="col">Replys</th>
+                            <th scope="col">Retweets</th>
+                            <th scope="col">Likes</th>
+                            <th scope="col">Created at</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <!-- Contenido tabla de últimos 5 tweets guardados -->
-                    <tr v-for="tweet in user.tweetsaved.slice(-5)" id='tweetssaved'>
-                        <td>{{ tweet.author }}</td>
-                        <td>{{ tweet.text }}</td>
-                        <td>{{ tweet.reply_count }}</td>
-                        <td>{{ tweet.retweet_count }}</td>
-                        <td>{{ tweet.like_count }}</td>
-                        <td>{{ tweet.created_at.slice(0,-6) }}</td>
-                    </tr>
+                        <!-- Contenido tabla de últimos 5 tweets guardados -->
+                        <tr v-for="tweet in user.tweetsaved.slice(-5)" id='tweetssaved'>
+                            <td>{{ tweet.author }}</td>
+                            <td>{{ tweet.text }}</td>
+                            <td>{{ tweet.reply_count }}</td>
+                            <td>{{ tweet.retweet_count }}</td>
+                            <td>{{ tweet.like_count }}</td>
+                            <td>{{ tweet.created_at.slice(0,-6) }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -143,6 +142,19 @@
   
   
 <script>
+  /**
+   * @vue-data {Form} search - Formulario de creación de una búsqueda
+   * @vue-data {Number} [min_value=10] - Mínimo de tweets que se pueden recuperar
+   * @vue-data {Number} [max_value=50] - Máximo de tweets que se pueden recuperar
+   * @vue-data {Number} [height=12] - Grosor slider seleccion de tweets
+   * @vue-data {Date} range - Fechas de selección de tweets
+   * @vue-data {String} masks - Formato de selección de fechas
+   * @vue-data {Date} min_date - Fecha mínima que se puede seleccionar
+   * @vue-data {Date} max_date - Fecha máxima que se puede seleccionar
+   * @vue-computed {Boolean} isLoggedIn
+   * @vue-event CreateSearch - Crea una nueva búsqueda
+   * @vue-event RepeatSearch - Repite una búsqueda realizada anteriormente
+   */    
 import { mapActions, mapGetters } from 'vuex';
 import 'vue-range-component/dist/vue-range-slider.css'
 import VueRangeSlider from 'vue-range-component'
@@ -151,6 +163,7 @@ import VCalendar from "v-calendar";
 export default {
 name: 'Home',
 components: { VCalendar, VueRangeSlider},
+components: { VueRangeSlider},
 data(){
     return {
         search: {
@@ -170,8 +183,7 @@ data(){
         masks: {
             input: 'YYYY-MM-DD',
         },
-        today: new Date(),
-        min_date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+        min_date: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000),
         max_date: new Date().toISOString().slice(0, 10),
     };
     
@@ -184,17 +196,12 @@ computed : {
     return this.$store.getters.isAuthenticated;
     },
     ...mapGetters({user: 'stateUser' }),
-    disabledTime () {
-      return new Date(
-        this.disabled_time.getDate() - 7,
-      );
-    },
 },
 methods: {
     ...mapActions(['createSearch']),
     // Metodo de creacion de una busqueda
-    async SaveSearch() {
-        // Comprobacion de campos rellenados
+    async CreateSearch() {
+        // Comprobacion de campos introducidos
         if (this.search.type == '' || this.search.title == '')
             $('#modalHome').modal()
         else {
@@ -204,6 +211,7 @@ methods: {
             if(this.search.type=="Tweet") {
                 try {
                     await this.createSearch(this.search);
+                    await this.$store.dispatch('viewMe');
                     await this.$store.dispatch('viewTweetSearch');
                     this.$router.push('/tweetanalysis');
                 } catch (error) {
@@ -214,6 +222,7 @@ methods: {
             else if(this.search.type=="User"){
                 try {
                     await this.createSearch(this.search);
+                    await this.$store.dispatch('viewMe');
                     await this.$store.dispatch('viewUserSearch');
                     await this.$store.dispatch('viewTweetSearch');
                     this.$router.push('/useranalysis');

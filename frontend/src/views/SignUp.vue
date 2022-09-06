@@ -73,6 +73,11 @@
 </template>
 
 <script>
+  /**
+   * @vue-data {Form} user - Formulario de registro de un usuario
+   * @vue-event submit - Envío del formulario de registro al backend
+   * @vue-event validateEmail - Comprobación de correcto formato de correo eléctronico
+   */
 import { mapActions } from 'vuex';
 export default {
   name: 'signUp',
@@ -92,12 +97,24 @@ export default {
     ...mapActions(['signUp']),
     async submit() {
       try {
-        await this.signUp(this.user);
-        this.$router.push('/search');
+        if (!this.validateEmail(this.user.email)) {
+          $("#modalSignUp .modal-body").text('Email entered in an invalid format, please try again');
+          $('#modalSignUp').modal()
+        } else {
+          await this.signUp(this.user);
+          this.$router.push('/search');
+        }       
       } catch (error) {
+        console.log(error)
         $('#modalSignUp').modal()
         throw 'Username already exists. Please try again.';
       }
+    },
+    validateEmail(email) 
+    {
+        var re = /\S+@\S+\.\S+/;
+        var valid = re.test(email);
+        return valid
     }
   }
 };
@@ -107,13 +124,6 @@ export default {
 #image-signup {
   background: url(../assets/signup.png) no-repeat top center;
 }
-/*!
- * Bootstrap v4.3.1 (https://getbootstrap.com/)
- * Copyright 2011-2019 The Bootstrap Authors
- * Copyright 2011-2019 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
- 
  section {
     display: block; 
     background-color: #f5f5ff;}

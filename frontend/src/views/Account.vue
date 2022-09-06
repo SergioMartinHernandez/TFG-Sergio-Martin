@@ -97,6 +97,13 @@
 </template>
 
 <script>
+  /**
+   * @vue-data {Form} formUserUpdate - Formulario de actualización de usuario
+   * @vue-computed {User} user
+   * @vue-event showDeleteAccount - Muestra el modal de confirmación de eliminación de usuario
+   * @vue-event deleteAccount - Borra un usuario del sistema
+   * @vue-event updateAccount - Actualiza los datos de un usuario del sistema
+   */
 import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'Account',
