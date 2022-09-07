@@ -71,7 +71,7 @@
                 <div class="col">
                     <!-- Selector de cantidad de tweets mostrados -->
                     <label><strong>Select the number of tweets you want to display</strong></label>
-                    <vue-range-slider id="slider" ref="slider" :min="min_value" :max="max_value" :height="height" v-model="search.num_tweets"></vue-range-slider>
+                    <vue-slider id="slider" ref="slider" :min="min_value" :max="max_value" :height="height" v-model="search.num_tweets"></vue-slider>
                 </div>  
             </div>
             <br/>
@@ -156,14 +156,13 @@
    * @vue-event RepeatSearch - Repite una búsqueda realizada anteriormente
    */    
 import { mapActions, mapGetters } from 'vuex';
-import 'vue-range-component/dist/vue-range-slider.css'
-import VueRangeSlider from 'vue-range-component'
+import VueSlider from 'vue-slider-component'
+import 'vue-slider-component/theme/default.css'
 import VCalendar from "v-calendar";
 
 export default {
 name: 'Home',
-components: { VCalendar, VueRangeSlider},
-components: { VueRangeSlider},
+components: { VCalendar, VueSlider},
 data(){
     return {
         search: {
