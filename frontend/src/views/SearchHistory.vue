@@ -134,9 +134,7 @@ export default {
     },
     async deleteSearchUser() {
       var data = this.selectedRows;
-      console.log(data)
        for (let i = 0; i < data.length; i++) {
-          console.log(data[i].id)
           await this.deleteSearch(data[i].id);
           await this.$store.dispatch('viewMe');
        }

@@ -148,7 +148,6 @@ export default {
                 password: this.formUserUpdate.password,
                 oldpassword: this.formUserUpdate.oldpassword,
               };
-              console.log(updatedUser)
               await this.updateUser(updatedUser);
               this.$router.push('/search');
             } catch (error) {

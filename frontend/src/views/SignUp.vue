@@ -105,7 +105,6 @@ export default {
           this.$router.push('/search');
         }       
       } catch (error) {
-        console.log(error)
         $('#modalSignUp').modal()
         throw 'Username already exists. Please try again.';
       }
