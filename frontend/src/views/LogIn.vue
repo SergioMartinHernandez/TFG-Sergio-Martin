@@ -58,11 +58,11 @@
 </template>
 
 <script>
-  /**
-   * @vue-data {Form} form - Formulario de inicio de sesión de un usuario
-   * @vue-event submit - Envío del formulario de inicio de sesión al backend
-   */
 import { mapActions } from 'vuex';
+/**
+ * @vue-data {Form} form - Formulario de inicio de sesión de un usuario
+ * @vue-event submit - Envío del formulario de inicio de sesión al backend
+ */
 export default {
   name: 'Login',
   data() {
@@ -140,11 +140,6 @@ export default {
   button {
     text-transform: none; }
   
-  button,
-  [type="button"],
-  [type="submit"] {
-    -webkit-appearance: button; }
-  
   button:not(:disabled),
   [type="button"]:not(:disabled),
   [type="reset"]:not(:disabled),
@@ -159,7 +154,7 @@ export default {
   
   ::-webkit-file-upload-button {
     font: inherit;
-    -webkit-appearance: button; }
+    }
   
   h3 {
     margin-bottom: 0.5rem;
