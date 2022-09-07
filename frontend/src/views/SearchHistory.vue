@@ -39,18 +39,18 @@
 
 
 <script>
-  /**
-   * @vue-data columns - Columnas de la tabla de historial de búsquedas
-   * @vue-data rows - Filas de la tabla de historial de búsquedas
-   * @vue-data selectedRows - Filas seleccionadas en la tabla
-   * @vue-computed {User} user
-   * @vue-event RepeatSearch - Repite una búsqueda realizada anteriormente
-   * @vue-event selectionChanged - Evento de cambio de selección casillero tabla de historial de búsquedas
-   * @vue-event deleteSearchUser - Borra una búsqueda realizada del historial de búsquedas
-   */
 import { mapActions, mapGetters } from 'vuex';
 import { VueGoodTable } from 'vue-good-table';
 import 'vue-good-table/dist/vue-good-table.css'
+/**
+ * @vue-data columns - Columnas de la tabla de historial de búsquedas
+ * @vue-data rows - Filas de la tabla de historial de búsquedas
+ * @vue-data selectedRows - Filas seleccionadas en la tabla
+ * @vue-computed {User} user
+ * @vue-event RepeatSearch - Repite una búsqueda realizada anteriormente
+ * @vue-event selectionChanged - Evento de cambio de selección casillero tabla de historial de búsquedas
+ * @vue-event deleteSearchUser - Borra una búsqueda realizada del historial de búsquedas
+ */
 
 export default {
   name: 'SearchHistory',

@@ -76,26 +76,26 @@
 
 
 <script>
-  /**
-   * @vue-data {Boolean} loaded - Variable de verificación de carga de gráfica 1
-   * @vue-data {Boolean} loaded2 - Variable de verificación de carga de gráfica 2
-   * @vue-data myColors - Colores gráfica de nube
-   * @vue-data defaultWords - Palabras gráfica de nube
-   * @vue-data chartOptions - Opciones de configuración gráfica de líneas
-   * @vue-data series - Datos gráfica de líneas
-   * @vue-data params - Parámetros de configuración de tabla de muestra de tweets
-   * @vue-computed {User} user
-   * @vue-computed {TweetSearch} tweetSearch
-   * @vue-event wordClickHandler - Evento de pulsado palabra en gráficas de nubes
-   * @vue-event onSelect - Evento de selección fila de tabla de muestra de tweets
-   * @vue-event onSelectionChange - Evento de cambio de selección fila de tabla de muestra de tweets
-   * @vue-event saveTweets - Guardado de tweets en el perfil del usuario
-   */
 import { mapGetters, mapActions } from 'vuex';
 import wordcloud from 'vue-wordcloud'
 import VueApexCharts from 'vue-apexcharts'
 import VueTableDynamic from 'vue-table-dynamic'
 import VueJsonToCsv from 'vue-json-to-csv'
+/**
+ * @vue-data {Boolean} loaded - Variable de verificación de carga de gráfica 1
+ * @vue-data {Boolean} loaded2 - Variable de verificación de carga de gráfica 2
+ * @vue-data myColors - Colores gráfica de nube
+ * @vue-data defaultWords - Palabras gráfica de nube
+ * @vue-data chartOptions - Opciones de configuración gráfica de líneas
+ * @vue-data series - Datos gráfica de líneas
+ * @vue-data params - Parámetros de configuración de tabla de muestra de tweets
+ * @vue-computed {User} user
+ * @vue-computed {TweetSearch} tweetSearch
+ * @vue-event wordClickHandler - Evento de pulsado palabra en gráficas de nubes
+ * @vue-event onSelect - Evento de selección fila de tabla de muestra de tweets
+ * @vue-event onSelectionChange - Evento de cambio de selección fila de tabla de muestra de tweets
+ * @vue-event saveTweets - Guardado de tweets en el perfil del usuario
+ */
 
 
 export default {

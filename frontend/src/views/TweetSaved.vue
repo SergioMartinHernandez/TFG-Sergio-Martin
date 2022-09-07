@@ -33,17 +33,17 @@
 
 
 <script>
-  /**
-   * @vue-data params - Parámetros de configuración de tabla de muestra de tweets
-   * @vue-computed {TweetSaved} tweetSaved
-   * @vue-event wordClickHandler - Evento de pulsado palabra en gráficas de nubes
-   * @vue-event onSelect - Evento de selección fila de tabla de muestra de tweets
-   * @vue-event onSelectionChange - Evento de cambio de selección fila de tabla de muestra de tweets
-   * @vue-event deleteTweetUser - Eliminación de tweets del perfil del usuario
-   */
 import { mapGetters, mapActions } from 'vuex';
 import VueTableDynamic from 'vue-table-dynamic'
 import VueJsonToCsv from 'vue-json-to-csv'
+/**
+ * @vue-data params - Parámetros de configuración de tabla de muestra de tweets
+ * @vue-computed {TweetSaved} tweetSaved
+ * @vue-event wordClickHandler - Evento de pulsado palabra en gráficas de nubes
+ * @vue-event onSelect - Evento de selección fila de tabla de muestra de tweets
+ * @vue-event onSelectionChange - Evento de cambio de selección fila de tabla de muestra de tweets
+ * @vue-event deleteTweetUser - Eliminación de tweets del perfil del usuario
+ */
 
 export default {
   name: 'TweetSaved',

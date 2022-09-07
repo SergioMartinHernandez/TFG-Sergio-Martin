@@ -141,24 +141,24 @@
 </template>
   
   
-<script>
-  /**
-   * @vue-data {Form} search - Formulario de creación de una búsqueda
-   * @vue-data {Number} [min_value=10] - Mínimo de tweets que se pueden recuperar
-   * @vue-data {Number} [max_value=50] - Máximo de tweets que se pueden recuperar
-   * @vue-data {Number} [height=12] - Grosor slider seleccion de tweets
-   * @vue-data {Date} range - Fechas de selección de tweets
-   * @vue-data {String} masks - Formato de selección de fechas
-   * @vue-data {Date} min_date - Fecha mínima que se puede seleccionar
-   * @vue-data {Date} max_date - Fecha máxima que se puede seleccionar
-   * @vue-computed {Boolean} isLoggedIn
-   * @vue-event CreateSearch - Crea una nueva búsqueda
-   * @vue-event RepeatSearch - Repite una búsqueda realizada anteriormente
-   */    
+<script>    
 import { mapActions, mapGetters } from 'vuex';
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/default.css'
 import VCalendar from "v-calendar";
+/**
+ * @vue-data {Form} search - Formulario de creación de una búsqueda
+ * @vue-data {Number} [min_value=10] - Mínimo de tweets que se pueden recuperar
+ * @vue-data {Number} [max_value=50] - Máximo de tweets que se pueden recuperar
+ * @vue-data {Number} [height=12] - Grosor slider seleccion de tweets
+ * @vue-data {Date} range - Fechas de selección de tweets
+ * @vue-data {String} masks - Formato de selección de fechas
+ * @vue-data {Date} min_date - Fecha mínima que se puede seleccionar
+ * @vue-data {Date} max_date - Fecha máxima que se puede seleccionar
+ * @vue-computed {Boolean} isLoggedIn
+ * @vue-event CreateSearch - Crea una nueva búsqueda
+ * @vue-event RepeatSearch - Repite una búsqueda realizada anteriormente
+ */
 
 export default {
 name: 'Home',
